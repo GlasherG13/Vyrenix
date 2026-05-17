@@ -78,7 +78,7 @@
             border-left: 1px solid var(--border);
             border-right: 1px solid var(--border);
             position: relative;
-            padding-bottom: 110px; /* FIXED: Added extra space so posts won't get cut off by fixed navbar */
+            padding-bottom: 110px;
             z-index: 1;
             display: flex;
             flex-direction: column;
@@ -103,6 +103,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            overflow-y: auto;
         }
 
         .gate-panel {
@@ -118,16 +119,14 @@
         }
 
         .gate-logo {
-            width: 70px;
-            height: 70px;
-            background: var(--primary);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            width: 75px;
+            height: 75px;
             margin: 0 auto 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background-image: url('https://i.ibb.co.com/5hz3pw5W/82141.jpg');
+            background-size: cover;
+            background-position: center;
             box-shadow: 0 0 15px var(--primary-glow);
         }
 
@@ -144,26 +143,71 @@
             margin-bottom: 25px;
         }
 
-        .google-login-btn {
-            width: 100%;
-            padding: 14px;
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            color: #334155;
-            font-weight: 600;
-            font-size: 14px;
+        /* Auth Form Elements */
+        .auth-form {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            flex-direction: column;
+            gap: 12px;
+            text-align: left;
         }
 
-        .google-login-btn:hover {
-            background: #f1f5f9;
-            border-color: #94a3b8;
+        .auth-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .auth-input-group label {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .auth-control {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #f8fafc;
+            transition: border-color 0.2s;
+        }
+
+        .auth-control:focus {
+            border-color: var(--primary);
+        }
+
+        .auth-action-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px var(--primary-glow);
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+
+        .auth-action-btn:hover {
+            background: #0052cc;
+        }
+
+        .auth-toggle-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .auth-toggle-text span {
+            color: var(--primary);
+            font-weight: bold;
+            cursor: pointer;
         }
 
         /* PIN Modal Overlay */
@@ -334,7 +378,7 @@
             display: block;
         }
 
-        /* --- TAB BERANDA: REORGANIZED --- */
+        /* --- TAB BERANDA --- */
         .db-grid-mini {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -731,7 +775,6 @@
             margin-bottom: 4px;
         }
 
-        /* NEW: Faction Tag Styling */
         .profile-faction-tag {
             display: inline-block;
             font-size: 11px;
@@ -762,7 +805,6 @@
             margin-bottom: 16px;
         }
 
-        /* NEW: Profile Editor Inputs Area */
         .profile-editor-box {
             background: #ffffff;
             border: 1px solid var(--border);
@@ -775,7 +817,6 @@
             gap: 10px;
         }
 
-        /* Personalization Interests Panel */
         .interests-panel {
             background: #f8fafc;
             border: 1px solid var(--border);
@@ -836,7 +877,7 @@
             margin-bottom: 10px;
         }
 
-        /* ---------------- FLOATING CHAT SYTEM ---------------- */
+        /* ---------------- FLOATING CHAT SYSTEM ---------------- */
         .chat-toggle-btn {
             position: fixed;
             bottom: 85px;
@@ -857,9 +898,7 @@
         }
 
         @media (max-width: 620px) {
-            .chat-toggle-btn {
-                right: 20px;
-            }
+            .chat-toggle-btn { right: 20px; }
         }
 
         .chat-unread-badge {
@@ -914,18 +953,8 @@
             align-items: center;
         }
 
-        .chat-title {
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        .chat-close-btn {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-        }
+        .chat-title { font-size: 12px; font-weight: 800; }
+        .chat-close-btn { background: none; border: none; color: white; cursor: pointer; font-size: 16px; }
 
         .chat-messages {
             flex: 1;
@@ -1005,7 +1034,7 @@
         /* ---------------- BOTTOM NAVIGATION NAVBAR ---------------- */
         .bottom-navbar {
             position: fixed;
-            bottom: 16px; /* FIXED: Netap rapi di layar hp dengan floating style */
+            bottom: 16px;
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 32px);
@@ -1035,18 +1064,9 @@
             transition: all 0.2s;
         }
 
-        .nav-item i {
-            font-size: 18px;
-        }
-
-        .nav-item.active {
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        .hidden-tab {
-            display: none !important;
-        }
+        .nav-item i { font-size: 18px; }
+        .nav-item.active { color: var(--primary); font-weight: 700; }
+        .hidden-tab { display: none !important; }
     </style>
 </head>
 <body>
@@ -1055,14 +1075,25 @@
 
     <div id="access-gate">
         <div class="gate-panel">
-            <div class="gate-logo"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="gate-logo"></div>
             <div class="gate-title cyber-font">VYRENIX ACCESS GATE</div>
             <div class="gate-subtitle mono-font">CORE ARCHIVE DECRYPTION PLATFORM V12.0</div>
             
-            <button class="google-login-btn" id="btn-google-login">
-                <i class="fa-brands fa-google" style="color: #4285F4; font-size: 16px;"></i>
-                Masuk dengan Akun Google
-            </button>
+            <form id="form-manual-auth" class="auth-form" onsubmit="return false;">
+                <div class="auth-input-group">
+                    <label class="mono-font">Email Transmisi</label>
+                    <input type="email" id="auth-email" class="auth-control" placeholder="nama@domain.com" required>
+                </div>
+                <div class="auth-input-group">
+                    <label class="mono-font">Kode Sandi Akses</label>
+                    <input type="password" id="auth-password" class="auth-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" id="btn-auth-submit" class="auth-action-btn cyber-font">Masuk Sistem</button>
+            </form>
+            
+            <div class="auth-toggle-text mono-font">
+                <span id="text-auth-toggle" data-mode="login">Belum terdaftar? Registrasi Kru Baru</span>
+            </div>
 
             <div id="ceo-bypass-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; flex-direction: column;">
                 <div style="background: #111; border: 2px solid #00d2ff; padding: 25px; border-radius: 10px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 0 15px #00d2ff;">
@@ -1075,7 +1106,7 @@
                 </div>
             </div>
 
-            <button id="btn-trigger-bypass" style="background: transparent; border: none; color: #1a1a1a; font-size: 11px; margin-top: 20px; display: block; width: 100%;">[ Secure Gateway Access ]</button>
+            <button id="btn-trigger-bypass" style="background: transparent; border: none; color: #64748b; font-size: 11px; margin-top: 25px; display: block; width: 100%; cursor: pointer;">[ Secure Gateway Access ]</button>
 
             <div class="pin-overlay" id="ceo-pin-overlay">
                 <div class="gate-title cyber-font" style="font-size:16px; margin-bottom:10px;">DEKRIPSI OTORITAS CEO</div>
@@ -1154,16 +1185,14 @@
                 <div class="feed-container" id="rec-feed-target"></div>
             </div>
 
-            <div class="feed-container" id="main-feed-target">
-                </div>
+            <div class="feed-container" id="main-feed-target"></div>
         </main>
 
         <section id="tab-subbed" class="tab-content">
             <div class="rec-header cyber-font" style="border:none; padding:0; margin-bottom:14px;">
                 <i class="fa-solid fa-star" style="color: #eab308;"></i> NODE KATEGORI TERMONITOR
             </div>
-            <div class="feed-container" id="subbed-feed-target">
-                </div>
+            <div class="feed-container" id="subbed-feed-target"></div>
         </section>
 
         <section id="tab-upload" class="tab-content">
@@ -1293,8 +1322,7 @@
                 <span class="chat-title cyber-font"><i class="fa-solid fa-network-wired"></i> VYRENIX CORE CHAT</span>
                 <button class="chat-close-btn" id="btn-close-chat"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="chat-messages" id="chat-messages-container">
-                </div>
+            <div class="chat-messages" id="chat-messages-container"></div>
             <form class="chat-input-area" id="form-chat-sender" onsubmit="return false;">
                 <input type="text" class="chat-input" id="input-chat-msg" placeholder="Ketik transmisi taktis..." autocomplete="off" required>
                 <button type="submit" class="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
@@ -1327,12 +1355,10 @@
     </div>
 
     <script type="module">
-        // Import Firebase modules direct through CDN Web SDK (v10)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // Konfigurasi Database Real-time Vyrenix Kamu
         const firebaseConfig = {
             apiKey: "AIzaSyDi6at8nAzVEabWeMLyjiv7t-V36lBFtQs",
             authDomain: "vyrenix-hub-databases.firebaseapp.com",
@@ -1343,13 +1369,10 @@
             measurementId: "G-4K45BM633K"
         };
 
-        // Initialize App Engines
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const googleProvider = new GoogleAuthProvider();
 
-        // Application Internal State Variables
         let currentUser = null;
         let userRole = "KRU"; 
         let userOtoritas = "CREW ACCESS / OBSERVER";
@@ -1359,7 +1382,6 @@
         let isChatOpen = false;
         let unreadChatCount = 0;
 
-        // Jukebox Tracklist
         const tracklist = [
             { title: "Neon Drift memory - SciFi Chill", url: "https://cdn.discordapp.com/attachments/1218962424049307750/1505278909271507104/Neon_Drift_Memory.mp3?ex=6a0a0bba&is=6a08ba3a&hm=fa54445414fc5b015336dc8b771beabe7c4db6501463543d57406f18f7c47e26&" },
             { title: "Luminous fracture - Vyrenix Ambient", url: "https://cdn.discordapp.com/attachments/1218962424049307750/1505278929248845975/Luminous_Fracture_.mp3?ex=6a0a0bbf&is=6a08ba3f&hm=9246f62fe4ea40731b1d095cc6c443e2ad4d2185952e1d036c2104fcef8fcedd&" }
@@ -1367,30 +1389,60 @@
         let currentTrackIdx = 0;
         const audioElement = document.getElementById('core-audio-engine');
 
-        // ================= JALUR LOGIN UTAMA (ANTI KEPENTAL/KEDIP DI HP) =================
+        // ================= NEW: EMAIL & PASSWORD AUTH LOGIC =================
 
-        document.getElementById('btn-google-login').addEventListener('click', async () => {
-            try {
-                // DIUBAH KE METODE REDIRECT AGAR DIHP TIDAK KEPENTAL browser
-                await signInWithRedirect(auth, googleProvider);
-            } catch (err) {
-                console.error("Authentication Error:", err);
-                alert("Gagal memicu pengalihan login Google Auth.");
+        const textAuthToggle = document.getElementById('text-auth-toggle');
+        const btnAuthSubmit = document.getElementById('btn-auth-submit');
+
+        textAuthToggle.addEventListener('click', () => {
+            const currentMode = textAuthToggle.getAttribute('data-mode');
+            if (currentMode === 'login') {
+                textAuthToggle.setAttribute('data-mode', 'register');
+                textAuthToggle.innerHTML = "Sudah punya akun? Masuk di sini";
+                btnAuthSubmit.innerText = "Daftar Kru Baru";
+            } else {
+                textAuthToggle.setAttribute('data-mode', 'login');
+                textAuthToggle.innerHTML = "Belum terdaftar? Registrasi Kru Baru";
+                btnAuthSubmit.innerText = "Masuk Sistem";
             }
         });
 
-        // PENANGKAP DATA SETELAH PROSES REDIRECT GOOGLE KELAR
-        getRedirectResult(auth)
-            .then((result) => {
-                if (result && result.user) {
-                    currentUser = result.user;
-                    // Begitu balik milih email, langsung tampilkan modal input PIN otoritas
+        document.getElementById('form-manual-auth').addEventListener('submit', async () => {
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
+            const mode = textAuthToggle.getAttribute('data-mode');
+
+            if (!email || !password) return;
+
+            btnAuthSubmit.disabled = true;
+            btnAuthSubmit.innerText = "Processing Transmisi...";
+
+            try {
+                if (mode === 'register') {
+                    // Sign Up Sequence
+                    const credential = await createUserWithEmailAndPassword(auth, email, password);
+                    currentUser = credential.user;
+                    
+                    // Set default display name dari email prefix
+                    const defaultName = email.split('@')[0];
+                    await updateProfile(currentUser, { displayName: defaultName });
+                    
+                    btnAuthSubmit.disabled = false;
                     document.getElementById('ceo-pin-overlay').style.display = 'flex';
+                } else {
+                    // Sign In Sequence
+                    const credential = await signInWithEmailAndPassword(auth, email, password);
+                    currentUser = credential.user;
+                    btnAuthSubmit.disabled = false;
+                    // Trigger PIN check inside Auth State Listener if role not yet determined
                 }
-            })
-            .catch((error) => {
-                console.error("Error mendeteksi redirect login:", error);
-            });
+            } catch (err) {
+                console.error(err);
+                alert("Akses Gagal: " + err.message);
+                btnAuthSubmit.disabled = false;
+                btnAuthSubmit.innerText = mode === 'login' ? "Masuk Sistem" : "Daftar Kru Baru";
+            }
+        });
 
         document.getElementById('btn-verify-pin').addEventListener('click', () => {
             const pinVal = document.getElementById('input-ceo-pin').value;
@@ -1458,12 +1510,18 @@
             initRealtimeListeners();
         }
 
-        // Monitor persistent authentication state adjustments
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const savedRole = sessionStorage.getItem('vyrenix_role') || "KRU";
-                const savedAuthText = sessionStorage.getItem('vyrenix_auth_text') || "CREW ACCESS / OBSERVER";
-                completeLoginSequence(user, savedRole, savedAuthText);
+                currentUser = user;
+                const savedRole = sessionStorage.getItem('vyrenix_role');
+                const savedAuthText = sessionStorage.getItem('vyrenix_auth_text');
+                
+                if (savedRole && savedAuthText) {
+                    completeLoginSequence(user, savedRole, savedAuthText);
+                } else {
+                    // If login persistent but session clear, prompt PIN to verify CEO
+                    document.getElementById('ceo-pin-overlay').style.display = 'flex';
+                }
             } else {
                 document.getElementById('access-gate').style.display = 'flex';
                 document.getElementById('app-bottom-navbar').style.display = 'none';
@@ -1498,21 +1556,18 @@
             document.getElementById('user-profile-name').innerText = currentUser.displayName || 'Anonymous Crew';
             document.getElementById('user-profile-status').innerText = userOtoritas;
 
-            // Pre-fill the input modifiers
             document.getElementById('edit-profile-name').value = currentUser.displayName || '';
             document.getElementById('edit-profile-avatar').value = currentUser.photoURL || '';
 
-            // NEW: Faction Realtime Display System Logic
             const factionBadge = document.getElementById('user-profile-faction');
             const factionPanel = document.getElementById('faction-selection-panel');
 
             if (userRole === "CEO") {
                 factionBadge.innerText = "Infinite Edge";
                 factionBadge.className = "profile-faction-tag faction-ie";
-                factionPanel.style.display = "none"; // Hide standard selector for CEO
+                factionPanel.style.display = "none";
             } else {
                 factionPanel.style.display = "block";
-                // Read from Firestore User Database node
                 onSnapshot(doc(db, "vyrenix_users", currentUser.uid), (docSnap) => {
                     if (docSnap.exists() && docSnap.data().faction) {
                         const selectedFaction = docSnap.data().faction;
@@ -1530,14 +1585,13 @@
             const checkboxes = document.querySelectorAll('.interest-checkbox');
             checkboxes.forEach(cb => {
                 cb.checked = checkedInterests.includes(cb.value);
-                cb.removeAttribute('onclick'); // prevent duplicates
+                cb.removeAttribute('onclick');
                 cb.addEventListener('change', () => {
                     updateUserInterests();
                 });
             });
         }
 
-        // NEW: Profile Data Update Engine Callback
         document.getElementById('btn-update-profile').addEventListener('click', async () => {
             const nameVal = document.getElementById('edit-profile-name').value.trim();
             const avatarVal = document.getElementById('edit-profile-avatar').value.trim();
@@ -1547,7 +1601,6 @@
                 return;
             }
 
-            // If logged in via Firebase Auth Object
             if (auth.currentUser) {
                 try {
                     await updateProfile(auth.currentUser, {
@@ -1560,7 +1613,6 @@
                     alert("Gagal memperbarui profil Firebase Auth.");
                 }
             } else {
-                // For Bypass Mode Session Modification Engine
                 currentUser.displayName = nameVal;
                 currentUser.photoURL = avatarVal || 'https://via.placeholder.com/150';
                 updateProfileUI();
@@ -1568,7 +1620,6 @@
             }
         });
 
-        // NEW: Faction Selector Engine Interaction Handler
         document.getElementById('select-user-faction').addEventListener('change', async (e) => {
             if (!currentUser || userRole === "CEO") return;
             const factionValue = e.target.value;
@@ -1737,38 +1788,38 @@
                 <button class="delete-node-btn" style="display: ${userRole === 'CEO' ? 'flex' : 'none'};" onclick="window.deleteVyrenixNode('${node.id}')">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-                ${node.imageUrl ? `<img src="${node.imageUrl}" class="node-img" alt="Arsip Log">` : ''}
+                \${node.imageUrl ? `<img src="\${node.imageUrl}" class="node-img" alt="Arsip Log">` : ''}
                 <div class="node-body">
                     <div class="node-header-info">
                         <div>
-                            <span class="node-caption">${node.caption}</span>
+                            <span class="node-caption">\${node.caption}</span>
                             <div class="node-badges" style="margin-top:4px;">
-                                <span class="badge-tag" style="background:${tierClassColor}">TIER ${node.tier}</span>
-                                <span class="badge-tag" style="background:var(--primary)">${node.category}</span>
-                                ${isRecommendedBadge ? `<span class="badge-tag" style="background:#f59e0b;"><i class="fa-solid fa-bolt"></i> DIREKOMENDASIKAN</span>` : ''}
+                                <span class="badge-tag" style="background:\${tierClassColor}">TIER \${node.tier}</span>
+                                <span class="badge-tag" style="background:var(--primary)">\${node.category}</span>
+                                \${isRecommendedBadge ? `<span class="badge-tag" style="background:#f59e0b;"><i class="fa-solid fa-bolt"></i> DIREKOMENDASIKAN</span>` : ''}
                             </div>
                         </div>
-                        <button class="bookmark-node-btn ${isBookmarked ? 'active' : ''}" onclick="window.toggleCategoryBookmark('${node.category}')" title="Monitor Kategori Ini">
+                        <button class="bookmark-node-btn \${isBookmarked ? 'active' : ''}" onclick="window.toggleCategoryBookmark('\${node.category}')" title="Monitor Kategori Ini">
                             <i class="fa-solid fa-star"></i>
                         </button>
                     </div>
-                    <div class="node-desc mono-font">${node.description}</div>
+                    <div class="node-desc mono-font">\${node.description}</div>
                     
                     <div class="comments-section">
-                        <div class="comments-count" id="count-${node.id}">Komentar (0)</div>
-                        <div class="comments-list" id="comments-list-${node.id}"></div>
+                        <div class="comments-count" id="count-\${node.id}">Komentar (0)</div>
+                        <div class="comments-list" id="comments-list-\${node.id}"></div>
                         <div class="comment-input-box">
-                            <input type="text" class="comment-field" id="input-field-${nodeId}" placeholder="Tulis komentar transmisi log...">
-                            <button class="comment-submit-btn" onclick="window.submitCommentNode('${node.id}')">Kirim</button>
+                            <input type="text" class="comment-field" id="input-field-\${node.id}" placeholder="Tulis komentar transmisi log...">
+                            <button class="comment-submit-btn" onclick="window.submitCommentNode('\${node.id}')">Kirim</button>
                         </div>
                     </div>
                 </div>
             `;
 
-            const commentsRef = query(collection(db, `vyrenix_nodes/${node.id}/comments`), orderBy("timestamp", "asc"));
+            const commentsRef = query(collection(db, `vyrenix_nodes/\${node.id}/comments`), orderBy("timestamp", "asc"));
             onSnapshot(commentsRef, (snapshot) => {
-                const commListTarget = card.querySelector(`#comments-list-${node.id}`);
-                const commCountTarget = card.querySelector(`#count-${node.id}`);
+                const commListTarget = card.querySelector(`#comments-list-\${node.id}`);
+                const commCountTarget = card.querySelector(`#count-\${node.id}`);
                 if (!commListTarget) return;
 
                 commListTarget.innerHTML = "";
@@ -1783,25 +1834,25 @@
                     commItem.className = "comment-item";
                     commItem.innerHTML = `
                         <div class="comment-meta">
-                            <img src="${cData.authorAvatar || 'https://via.placeholder.com/50'}" class="comment-avatar">
-                            <span class="comment-author">${cData.authorName}</span>
-                            <span class="comment-role-badge ${cData.authorRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}">${cData.authorRole}</span>
+                            <img src="\${cData.authorAvatar || 'https://via.placeholder.com/50'}" class="comment-avatar">
+                            <span class="comment-author">\${cData.authorName}</span>
+                            <span class="comment-role-badge \${cData.authorRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}">\${cData.authorRole}</span>
                         </div>
-                        <div class="comment-text">${cData.text}</div>
+                        <div class="comment-text">\${cData.text}</div>
                         <div class="comment-actions">
-                            <span class="comment-action-btn" onclick="window.likeCommentAction('${node.id}', '${cId}', ${cData.likes || 0})">
-                                <i class="fa-solid fa-thumbs-up"></i> Liked (${cData.likes || 0})
+                            <span class="comment-action-btn" onclick="window.likeCommentAction('\${node.id}', '\${cId}', \${cData.likes || 0})">
+                                <i class="fa-solid fa-thumbs-up"></i> Liked (\${cData.likes || 0})
                             </span>
-                            <span class="comment-action-btn" onclick="window.triggerReplyPrompt('${node.id}', '${cId}')">
+                            <span class="comment-action-btn" onclick="window.triggerReplyPrompt('\${node.id}', '\${cId}')">
                                 <i class="fa-solid fa-reply"></i> Balas
                             </span>
                         </div>
-                        <div class="replies-list" id="replies-container-${cId}"></div>
+                        <div class="replies-list" id="replies-container-\${cId}"></div>
                     `;
 
-                    const repliesRef = query(collection(db, `vyrenix_nodes/${node.id}/comments/${cId}/replies`), orderBy("timestamp", "asc"));
+                    const repliesRef = query(collection(db, `vyrenix_nodes/\${node.id}/comments/\${cId}/replies`), orderBy("timestamp", "asc"));
                     onSnapshot(repliesRef, (rSnapshot) => {
-                        const replyTarget = commItem.querySelector(`#replies-container-${cId}`);
+                        const replyTarget = commItem.querySelector(`#replies-container-\${cId}`);
                         if (!replyTarget) return;
                         replyTarget.innerHTML = "";
 
@@ -1811,11 +1862,11 @@
                             replyItem.className = "reply-item";
                             replyItem.innerHTML = `
                                 <div class="comment-meta">
-                                    <img src="${rData.authorAvatar || 'https://via.placeholder.com/50'}" class="comment-avatar" style="width:14px; height:14px;">
-                                    <span class="comment-author" style="font-size:10px;">${rData.authorName}</span>
-                                    <span class="comment-role-badge ${rData.authorRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}" style="font-size:7px; padding:0 2px;">${rData.authorRole}</span>
+                                    <img src="\${rData.authorAvatar || 'https://via.placeholder.com/50'}" class="comment-avatar" style="width:14px; height:14px;">
+                                    <span class="comment-author" style="font-size:10px;">\${rData.authorName}</span>
+                                    <span class="comment-role-badge \${rData.authorRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}" style="font-size:7px; padding:0 2px;">\${rData.authorRole}</span>
                                 </div>
-                                <div class="comment-text" style="font-size:11px; margin:0;">${rData.text}</div>
+                                <div class="comment-text" style="font-size:11px; margin:0;">\${rData.text}</div>
                             `;
                             replyTarget.appendChild(replyItem);
                         });
@@ -1824,7 +1875,7 @@
                     commListTarget.appendChild(commItem);
                 });
 
-                commCountTarget.innerText = `Komentar (${count})`;
+                commCountTarget.innerText = `Komentar (\${count})`;
             });
 
             return card;
@@ -1851,12 +1902,12 @@
         };
 
         window.submitCommentNode = async function(nodeId) {
-            const inputEl = document.getElementById(`input-field-${nodeId}`);
+            const inputEl = document.getElementById(`input-field-\${nodeId}`);
             const textVal = inputEl.value.trim();
-            if (!textVal || !currentUser) return; // FIXED: Added verification for user auth status before processing
+            if (!textVal || !currentUser) return; 
 
             try {
-                await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments`), {
+                await addDoc(collection(db, `vyrenix_nodes/\${nodeId}/comments`), {
                     text: textVal,
                     authorName: currentUser.displayName || "Anonymous Crew",
                     authorAvatar: currentUser.photoURL || "https://via.placeholder.com/150",
@@ -1871,7 +1922,7 @@
         };
 
         window.likeCommentAction = async function(nodeId, commentId, currentLikes) {
-            const commentRef = doc(db, `vyrenix_nodes/${nodeId}/comments`, commentId);
+            const commentRef = doc(db, `vyrenix_nodes/\${nodeId}/comments`, commentId);
             await updateDoc(commentRef, {
                 likes: currentLikes + 1
             });
@@ -1879,10 +1930,10 @@
 
         window.triggerReplyPrompt = async function(nodeId, commentId) {
             const replyText = prompt("Masukkan pesan balasan anda:");
-            if (!replyText || !replyText.trim() || !currentUser) return; // FIXED: Added safety conditions for comment replies fallback
+            if (!replyText || !replyText.trim() || !currentUser) return; 
 
             try {
-                await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments/${commentId}/replies`), {
+                await addDoc(collection(db, `vyrenix_nodes/\${nodeId}/comments/\${commentId}/replies`), {
                     text: replyText.trim(),
                     authorName: currentUser.displayName || "Anonymous Crew",
                     authorAvatar: currentUser.photoURL || "https://via.placeholder.com/150",
@@ -1993,7 +2044,7 @@
             e.preventDefault();
             const chatField = document.getElementById('input-chat-msg');
             const messageText = chatField.value.trim();
-            if (!messageText || !currentUser) return; // FIXED: Restored complete stability check validation for chat submission
+            if (!messageText || !currentUser) return; 
 
             try {
                 await addDoc(collection(db, "vyrenix_chats"), {
@@ -2014,13 +2065,13 @@
             const isSelf = chat.senderUid === currentUser?.uid;
 
             const bubble = document.createElement('div');
-            bubble.className = `chat-bubble ${isSelf ? 'self' : 'other'}`;
+            bubble.className = `chat-bubble \${isSelf ? 'self' : 'other'}`;
             bubble.innerHTML = `
                 <div class="chat-user-meta">
-                    <span>${chat.senderName}</span>
-                    <span class="comment-role-badge ${chat.senderRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}" style="font-size:7px; padding:0 3px;">${chat.senderRole}</span>
+                    <span>\${chat.senderName}</span>
+                    <span class="comment-role-badge \${chat.senderRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}" style="font-size:7px; padding:0 3px;">\${chat.senderRole}</span>
                 </div>
-                <div>${chat.text}</div>
+                <div>\${chat.text}</div>
             `;
             container.appendChild(bubble);
         }
