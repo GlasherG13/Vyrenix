@@ -1417,7 +1417,6 @@
             }
         });
 
-        // PERBAIKAN: Ditambahkan parameter event (e) dan e.preventDefault()
         document.getElementById('form-manual-auth').addEventListener('submit', async (e) => {
             e.preventDefault(); 
             const email = document.getElementById('auth-email').value.trim();
@@ -1438,7 +1437,13 @@
                     await updateProfile(currentUser, { displayName: defaultName });
                     
                     btnAuthSubmit.disabled = false;
-                    document.getElementById('ceo-pin-overlay').style.display = 'flex';
+                    
+                    // FIXED: Hanya tanyakan PIN jika yang mendaftar adalah email CEO utama
+                    if (email === "sayaraju71@gmail.com") {
+                        document.getElementById('ceo-pin-overlay').style.display = 'flex';
+                    } else {
+                        completeLoginSequence(currentUser, "KRU", "CREW ACCESS / OBSERVER");
+                    }
                 } else {
                     const credential = await signInWithEmailAndPassword(auth, email, password);
                     currentUser = credential.user;
@@ -1455,11 +1460,12 @@
         document.getElementById('btn-verify-pin').addEventListener('click', () => {
             const pinVal = document.getElementById('input-ceo-pin').value;
             
-            if (pinVal === "1307") {
+            // FIXED: Double-guard PIN harus benar DAN emailnya wajib email CEO Raju
+            if (pinVal === "1307" && currentUser && currentUser.email === "sayaraju71@gmail.com") {
                 document.getElementById('ceo-pin-overlay').style.display = 'none';
                 completeLoginSequence(currentUser, "CEO", "CEO ACCESS / FOUNDER");
             } else {
-                alert("PIN Otoritas Salah! Mengalihkan ke Akses Observasi Kru.");
+                alert("Akses CEO Ditolak! Mengalihkan ke Akses Observasi Kru.");
                 document.getElementById('ceo-pin-overlay').style.display = 'none';
                 completeLoginSequence(currentUser, "KRU", "CREW ACCESS / OBSERVER");
             }
@@ -1521,13 +1527,20 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
-                const savedRole = sessionStorage.getItem('vyrenix_role');
-                const savedAuthText = sessionStorage.getItem('vyrenix_auth_text');
                 
-                if (savedRole && savedAuthText) {
-                    completeLoginSequence(user, savedRole, savedAuthText);
+                // FIXED: Hanya email CEO Raju yang dicek status PIN-nya saat refresh halaman/login baru
+                if (user.email === "sayaraju71@gmail.com") {
+                    const savedRole = sessionStorage.getItem('vyrenix_role');
+                    const savedAuthText = sessionStorage.getItem('vyrenix_auth_text');
+                    
+                    if (savedRole === "CEO" && savedAuthText) {
+                        completeLoginSequence(user, savedRole, savedAuthText);
+                    } else {
+                        document.getElementById('ceo-pin-overlay').style.display = 'flex';
+                    }
                 } else {
-                    document.getElementById('ceo-pin-overlay').style.display = 'flex';
+                    // Akun Google/Email lain otomatis diset jadi KRU tanpa dilempar ke overlay PIN
+                    completeLoginSequence(user, "KRU", "CREW ACCESS / OBSERVER");
                 }
             } else {
                 document.getElementById('access-gate').style.display = 'flex';
@@ -1734,7 +1747,6 @@
             });
         }
 
-        // PERBAIKAN: Seluruh Template Literal telah disesuaikan dengan menghapus Backslash (\)
         function renderFeedsEngine() {
             const mainFeedTarget = document.getElementById('main-feed-target');
             const recFeedTarget = document.getElementById('rec-feed-target');
