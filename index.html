@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vyrenix Core App v12.0</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #0066ff;
+            --primary-glow: rgba(0, 102, 255, 0.4);
+            --accent: #00d2ff;
+            --accent-glow: rgba(0, 210, 255, 0.3);
+            --bg: #f0f6fc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --ceo-color: #0066ff;
+            --kru-color: #64748b;
+            --tier-sss: #ef4444;
+            --tier-s: #a855f7;
+            --tier-a: #3b82f6;
+            --tier-b: #10b981;
+            --tier-d: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Scanlines Overlay Effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.03) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.01));
+            z-index: 9999;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+        }
+
+        /* Planet Radial Background Accent */
+        .planet-bg {
+            position: fixed;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0,210,255,0.15) 0%, rgba(0,102,255,0.05) 50%, rgba(240,246,252,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Mobile Optimization Wrapper */
+        .app-container {
+            max-width: 600px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            position: relative;
+            padding-bottom: 90px; /* Space for bottom navbar */
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fonts Utilities */
+        .cyber-font {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+        .mono-font {
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* ---------------- ACCESS GATE (LOGIN) ---------------- */
+        #access-gate {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #f8fafc;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .gate-panel {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 66, 255, 0.1), inset 0 0 15px rgba(0, 102, 255, 0.05);
+            text-align: center;
+            position: relative;
+        }
+
+        .gate-logo {
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .gate-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .gate-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        .google-login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            color: #334155;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .google-login-btn:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        /* PIN Modal Overlay */
+        .pin-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .pin-input {
+            width: 160px;
+            padding: 10px;
+            font-size: 22px;
+            text-align: center;
+            letter-spacing: 6px;
+            border: 2px solid var(--primary);
+            background: #f8fafc;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            outline: none;
+            color: var(--primary);
+        }
+
+        .pin-btn {
+            padding: 8px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ---------------- HEADER & JUKEBOX ---------------- */
+        header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background-image: url('https://i.ibb.co.com/5hz3pw5W/82141.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .auth-badge {
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-ceo {
+            background: rgba(0, 102, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .badge-kru {
+            background: rgba(100, 116, 139, 0.1);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        /* Jukebox UI */
+        .jukebox {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .track-info {
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .track-info i {
+            color: var(--accent);
+        }
+
+        .jukebox-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .juke-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 13px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .juke-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .juke-btn.playing {
+            color: var(--primary);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 102, 255, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(0, 102, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 102, 255, 0); }
+        }
+
+        /* ---------------- MAIN CONTENT APPS ---------------- */
+        .tab-content {
+            padding: 16px;
+            flex: 1;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* --- TAB BERANDA: REORGANIZED --- */
+        /* 4 Database Mini Buttons at Top */
+        .db-grid-mini {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .db-btn-mini {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .db-btn-mini i {
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        .db-btn-mini span {
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .db-btn-mini:hover, .db-btn-mini.active {
+            border-color: var(--primary);
+            background: rgba(0, 102, 255, 0.03);
+            box-shadow: 0 2px 8px rgba(0, 102, 255, 0.08);
+        }
+
+        /* Filters Bar */
+        .filter-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .filter-select {
+            flex: 1;
+            padding: 6px 10px;
+            font-size: 12px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        /* Recommendation Section */
+        .recommendation-zone {
+            background: linear-gradient(135deg, rgba(0,210,255,0.06) 0%, rgba(0,102,255,0.02) 100%);
+            border: 1px dashed var(--accent);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 20px;
+            display: none; /* Shown dynamically via JS */
+        }
+
+        .rec-header {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Data Cards Layout */
+        .feed-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .node-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        .node-img {
+            width: 100%;
+            height: auto;
+            max-height: 260px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border);
+            display: block;
+        }
+
+        .node-body {
+            padding: 14px;
+        }
+
+        .node-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .node-caption {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .node-badges {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .badge-tag {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        .node-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border-left: 2px solid var(--border);
+        }
+
+        /* Delete Node Trigger (CEO Only) */
+        .delete-node-btn {
+            position: absolute;
+            top: 10px; right: 10px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            display: none; /* Controlled in JS based on role */
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 5;
+            font-size: 11px;
+        }
+
+        /* Bookmark Toggle inside Node */
+        .bookmark-node-btn {
+            background: none;
+            border: none;
+            color: #cbd5e1;
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .bookmark-node-btn.active {
+            color: #eab308;
+        }
+
+        /* Comments Layout */
+        .comments-section {
+            border-top: 1px solid var(--border);
+            padding: 12px 14px;
+            background: #fafafa;
+        }
+
+        .comments-count {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .comment-item {
+            font-size: 12px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 10px;
+        }
+
+        .comment-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .comment-avatar {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .comment-role-badge {
+            font-size: 8px;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .comment-role-ceo { background: rgba(0,102,255,0.1); color: var(--primary); }
+        .comment-role-kru { background: rgba(0,0,0,0.05); color: var(--text-muted); }
+
+        .comment-text {
+            color: var(--text-main);
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 12px;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .comment-action-btn {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .comment-action-btn:hover { color: var(--primary); }
+
+        /* Replies - Nesting level 2 */
+        .replies-list {
+            margin-top: 6px;
+            padding-left: 12px;
+            border-left: 1px dashed var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .reply-item {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 6px 8px;
+            font-size: 11px;
+        }
+
+        /* Add comment inputs */
+        .comment-input-box {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .comment-field {
+            flex: 1;
+            padding: 6px 10px;
+            font-size: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .comment-submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* --- TAB UPLOAD --- */
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .preview-zone {
+            width: 100%;
+            height: 180px;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            overflow: hidden;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        .preview-zone img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            background: white;
+        }
+
+        .form-submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px var(--primary-glow);
+        }
+
+        /* --- TAB PROFIL --- */
+        .profile-card {
+            text-align: center;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar-wrapper {
+            position: relative;
+            width: 90px; height: 90px;
+            margin: 0 auto 14px;
+        }
+
+        .profile-avatar {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .profile-status {
+            font-size: 11px;
+            color: var(--primary);
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        /* Personalization Interests Panel */
+        .interests-panel {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .interests-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .interests-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .interest-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 10px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* --- TAB DESKRIPSI --- */
+        .desc-text {
+            font-size: 13px;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+        .desc-text h3 {
+            margin: 16px 0 8px;
+            font-size: 14px;
+            color: var(--primary);
+        }
+        .desc-text p {
+            margin-bottom: 10px;
+        }
+
+        /* ---------------- FLOATING CHAT SYTEM ---------------- */
+        .chat-toggle-btn {
+            position: fixed;
+            bottom: 85px;
+            right: calc(50% - 280px); /* Position dynamically aligned relative to center 600px wrapper */
+            width: 52px; height: 52px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: none; /* Visible after access gate passes */
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            z-index: 999;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+
+        @media (max-width: 620px) {
+            .chat-toggle-btn {
+                right: 20px;
+            }
+        }
+
+        .chat-unread-badge {
+            position: absolute;
+            top: -2px; right: -2px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            border-radius: 10px;
+            padding: 2px 6px;
+            border: 2px solid white;
+            display: none;
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 150px;
+            right: calc(50% - 280px);
+            width: 340px;
+            height: 420px;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 998;
+            animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (max-width: 620px) {
+            .chat-window {
+                right: 20px;
+                width: calc(100% - 40px);
+                max-width: 340px;
+            }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-title {
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .chat-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 12px;
+            background: #f1f5f9;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.4;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .chat-bubble.self {
+            background: #e6f0ff;
+            color: var(--text-main);
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+            border: 1px solid rgba(0,102,255,0.1);
+        }
+
+        .chat-bubble.other {
+            background: white;
+            color: var(--text-main);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            border: 1px solid var(--border);
+        }
+
+        .chat-user-meta {
+            font-size: 9px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chat-input-area {
+            padding: 8px;
+            background: white;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 6px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .chat-send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ---------------- BOTTOM NAVIGATION NAVBAR ---------------- */
+        .bottom-navbar {
+            position: fixed;
+            bottom: 42px; /* 👈 Sudah dinaikkan agar aman dari iklan */
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 568px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border-radius: 30px;
+            display: none; /* Controlled via Access Gate */
+            grid-template-columns: repeat(5, 1fr);
+            padding: 0 10px;
+            z-index: 99999; /* 👈 Diubah jadi tertinggi agar anti-tertutup */
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            gap: 3px;
+            transition: all 0.2s;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .hidden-tab {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="planet-bg"></div>
+
+    <!-- ACCESS GATE WINDOW -->
+    <div id="access-gate">
+        <div class="gate-panel">
+            <div class="gate-logo"><i class="fa-solid : fa-shield-halved"></i></div>
+            <div class="gate-title cyber-font">VYRENIX ACCESS GATE</div>
+            <div class="gate-subtitle mono-font">CORE ARCHIVE DECRYPTION PLATFORM V12.0</div>
+            
+            <button class="google-login-btn" id="btn-google-login">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_"Circles"_Logo,.svg" alt="G" width="18" height="18" style="display:none;">
+                <i class="fa-brands fa-google" style="color: #4285F4; font-size: 16px;"></i>
+                Masuk dengan Akun Google
+            </button>
+
+            <!-- PIN Otoritas CEO Verification Overlay -->
+                <div id="ceo-bypass-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; flex-direction: column;">
+        <div style="background: #111; border: 2px solid #00d2ff; padding: 25px; border-radius: 10px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 0 15px #00d2ff;">
+            <h3 style="color: #00d2ff; margin-bottom: 15px; font-family: monospace;">VYRENIX BYPASS GATE</h3>
+            <input type="text" id="bypass-username" placeholder="Username" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 5px;">
+            <input type="password" id="bypass-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 5px;">
+            <input type="password" id="bypass-pin" placeholder="Secure PIN" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: #fff; border-radius: 5px; text-align: center;">
+            <button id="btn-submit-bypass" style="width: 100%; padding: 10px; background: #00d2ff; color: #000; border: none; border-radius: 5px; font-weight: bold;">VERIFIKASI OTORITAS</button>
+            <button id="btn-close-bypass" style="width: 100%; padding: 8px; margin-top: 5px; background: transparent; color: #aaa; border: none; font-size: 12px;">Batal</button>
+        </div>
+    </div>
+
+    <button id="btn-trigger-bypass" style="background: transparent; border: none; color: #1a1a1a; font-size: 11px; margin-top: 20px; display: block; width: 100%;">[ Secure Gateway Access ]</button>
+
+            <div class="pin-overlay" id="ceo-pin-overlay">
+                <div class="gate-title cyber-font" style="font-size:16px; margin-bottom:10px;">DEKRIPSI OTORITAS CEO</div>
+                <div class="gate-subtitle mono-font">Masukkan PIN Enkripsi Utama</div>
+                <input type="password" class="pin-input" id="input-ceo-pin" maxlength="4" placeholder="••••">
+                <button class="pin-btn cyber-font" id="btn-verify-pin">VERIFIKASI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP STRUCTURE -->
+    <div class="app-container">
+        
+        <!-- HEADER MODULE -->
+        <header>
+            <div class="header-top">
+                <div class="brand">
+                    <div class="brand-logo"></div>
+                    <div class="brand-name cyber-font">VYRENIX</div>
+                </div>
+                <div id="user-role-badge" class="auth-badge mono-font badge-kru">GUEST ACCESS</div>
+            </div>
+            
+            <!-- JUKEBOX COMPONENT -->
+            <div class="jukebox">
+                <div class="track-info">
+                    <i class="fa-solid fa-compact-disc fa-spin"></i>
+                    <span id="current-track-title" class="mono-font">Audio System Off</span>
+                </div>
+                <div class="jukebox-controls">
+                    <button class="juke-btn" id="juke-play-toggle"><i class="fa-solid fa-play"></i></button>
+                    <button class="juke-btn" id="juke-next-track"><i class="fa-solid fa-forward"></i></button>
+                </div>
+            </div>
+            <audio id="core-audio-engine" loop></audio>
+        </header>
+
+        <!-- ================= TAB CONTENT SYSTEM ================= -->
+
+        <!-- TAB 1: BERANDA -->
+        <main id="tab-beranda" class="tab-content active">
+            <!-- 4 Database Mini Buttons Built Top -->
+            <div class="db-grid-mini mono-font">
+                <div class="db-btn-mini" data-cat="Geographical">
+                    <i class="fa-solid fa-earth-asia"></i>
+                    <span>Geography</span>
+                </div>
+                <div class="db-btn-mini" data-cat="Astronomical">
+                    <i class="fa-solid fa-user-astronaut"></i>
+                    <span>Astronomy</span>
+                </div>
+                <div class="db-btn-mini" data-cat="Technology Research">
+                    <i class="fa-solid fa-microchip"></i>
+                    <span>Research</span>
+                </div>
+                <div class="db-btn-mini" data-cat="Product Database">
+                    <i class="fa-solid fa-box-open"></i>
+                    <span>Products</span>
+                </div>
+            </div>
+
+            <!-- Filters System Row -->
+            <div class="filter-container">
+                <span class="filter-label mono-font"><i class="fa-solid fa-filter"></i> Filter:</span>
+                <select id="filter-category" class="filter-select">
+                    <option value="ALL">Semua Kategori</option>
+                    <option value="Geographical">Geographical</option>
+                    <option value="Astronomical">Astronomical</option>
+                    <option value="Technology Research">Technology Research</option>
+                    <option value="Product Database">Product Database</option>
+                </select>
+                <select id="filter-tier" class="filter-select">
+                    <option value="ALL">Semua Tier</option>
+                    <option value="SSS+">Tier SSS+</option>
+                    <option value="S">Tier S</option>
+                    <option value="A">Tier A</option>
+                    <option value="B">Tier B</option>
+                    <option value="D">Tier D</option>
+                </select>
+            </div>
+
+            <!-- Dynamic Recommendation Zone -->
+            <div class="recommendation-zone" id="rec-zone">
+                <div class="rec-header cyber-font"><i class="fa-solid fa-bolt"></i> REKOMENDASI KONTEN UNTUK ANDA</div>
+                <div class="feed-container" id="rec-feed-target"></div>
+            </div>
+
+            <!-- Main Data Feed List -->
+            <div class="feed-container" id="main-feed-target">
+                <!-- Loaded dynamically -->
+            </div>
+        </main>
+
+        <!-- TAB 2: SUBBED (BOOKMARKS) -->
+        <section id="tab-subbed" class="tab-content">
+            <div class="rec-header cyber-font" style="border:none; padding:0; margin-bottom:14px;">
+                <i class="fa-solid fa-star" style="color: #eab308;"></i> NODE KATEGORI TERMONITOR
+            </div>
+            <div class="feed-container" id="subbed-feed-target">
+                <!-- Saved items render here -->
+            </div>
+        </section>
+
+        <!-- TAB 3: UPLOAD (CEO EXCLUSIVE) -->
+        <section id="tab-upload" class="tab-content">
+            <div class="rec-header cyber-font" style="border:none; padding:0; margin-bottom:14px;">
+                <i class="fa-solid fa-cloud-arrow-up"></i> UNGGAN LOG ARSIP LABORATORIUM
+            </div>
+            <form class="upload-form" id="form-node-uploader" onsubmit="return false;">
+                <div class="preview-zone" id="btn-trigger-file">
+                    <i class="fa-solid fa-camera" style="font-size: 24px; color: var(--text-muted); margin-bottom: 6px;"></i>
+                    <span style="font-size: 11px; color: var(--text-muted);">Pilih Gambar / Screenshoot Log</span>
+                    <input type="file" id="input-node-file" accept="image/*" style="display: none;">
+                    <img id="image-upload-preview" style="display: none;">
+                </div>
+
+                <div class="form-group">
+                    <label>Nama / Caption Node</label>
+                    <input type="text" id="input-node-caption" class="form-control" placeholder="Masukkan judul arsip data..." required>
+                </div>
+
+                <div class="form-group">
+                    <label>Kategori Penempatan</label>
+                    <select id="input-node-category" class="form-control">
+                        <option value="Geographical">Geographical</option>
+                        <option value="Astronomical">Astronomical</option>
+                        <option value="Technology Research">Technology Research</option>
+                        <option value="Product Database">Product Database</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Klasifikasi Keamanan Tier</label>
+                    <select id="input-node-tier" class="form-control">
+                        <option value="D">Tier D (Umum)</option>
+                        <option value="B">Tier B (Kru Terbatas)</option>
+                        <option value="A">Tier A (Rahasia Taktis)</option>
+                        <option value="S">Tier S (Sangat Terbatas)</option>
+                        <option value="SSS+">Tier SSS+ (Otoritas Tertinggi)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Log Deskripsi Teknis</label>
+                    <textarea id="input-node-desc" class="form-control" rows="4" placeholder="Tuliskan isi atau analisis log data laboratorium..." required></textarea>
+                </div>
+
+                <button type="submit" class="form-submit-btn" id="btn-submit-node">Unggah ke Cloud Server</button>
+            </form>
+        </section>
+
+        <!-- TAB 4: DESKRIPSI -->
+        <section id="tab-deskripsi" class="tab-content">
+            <div class="desc-text">
+                <div class="rec-header cyber-font" style="border:none; padding:0; margin-bottom:14px;">
+                    <i class="fa-solid fa-circle-info"></i> SPESIFIKASI INTEL INTELLECT
+                </div>
+                <h3>SISTEM HAK AKSES DESENTRALISASI</h3>
+                <p>Vyrenix Core App v12.0 dikembangkan sebagai platform koordinasi real-time lintas sektor fiksi untuk Vyrenix Industry Corp dan armada penjelajah <strong>Infinite Edge</strong>.</p>
+                <p>Seluruh transmisi data dienkripsi menggunakan protokol jaringan end-to-end terdistribusi, memastikan integrasi cloud database yang aman, real-time, dan lifetime.</p>
+                <h3>LEGALITAS CEO</h3>
+                <p>Sesuai dengan direktif internal Vyrenix, identitas terverifikasi <strong>CEO Raju Aditia</strong> memegang kontrol mutlak atas manajemen node data, penghapusan repositori log, dan hak otorisasi uploader utama.</p>
+            </div>
+        </section>
+
+        <!-- TAB 5: PROFIL & PERSONALISASI INTERESTS -->
+        <section id="tab-profil" class="tab-content">
+            <div class="profile-card">
+                <div class="profile-avatar-wrapper">
+                    <img src="" id="user-profile-img" class="profile-avatar" alt="Avatar">
+                </div>
+                <div id="user-profile-name" class="profile-name">Loading Profile...</div>
+                <div id="user-profile-status" class="profile-status mono-font">-</div>
+                
+                <!-- Interests Checklist Panel for recommendation architecture -->
+                <div class="interests-panel">
+                    <div class="interests-title mono-font"><i class="fa-solid fa-heart"></i> Minat Eksplorasi Kru</div>
+                    <div class="interests-grid">
+                        <label class="interest-item">
+                            <input type="checkbox" class="interest-checkbox" value="Geographical" checked>
+                            Geographical
+                        </label>
+                        <label class="interest-item">
+                            <input type="checkbox" class="interest-checkbox" value="Astronomical" checked>
+                            Astronomical
+                        </label>
+                        <label class="interest-item">
+                            <input type="checkbox" class="interest-checkbox" value="Technology Research">
+                            Tech Research
+                        </label>
+                        <label class="interest-item">
+                            <input type="checkbox" class="interest-checkbox" value="Product Database">
+                            Product DB
+                        </label>
+                    </div>
+                </div>
+
+                <button class="logout-btn cyber-font" id="btn-logout">LOGOUT DARI SISTEM</button>
+            </div>
+        </section>
+
+        <!-- ---------------- FLOATING ENCRYPTED CHAT ROOM ---------------- -->
+        <button class="chat-toggle-btn" id="btn-toggle-chat">
+            <i class="fa-solid fa-message"></i>
+            <span class="chat-unread-badge" id="unread-count-badge">0</span>
+        </button>
+
+        <div class="chat-window" id="popup-chat-window">
+            <div class="chat-header">
+                <span class="chat-title cyber-font"><i class="fa-solid fa-network-wired"></i> VYRENIX CORE CHAT</span>
+                <button class="chat-close-btn" id="btn-close-chat"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="chat-messages" id="chat-messages-container">
+                <!-- Real-time chat elements loaded here -->
+            </div>
+            <form class="chat-input-area" id="form-chat-sender" onsubmit="return false;">
+                <input type="text" class="chat-input" id="input-chat-msg" placeholder="Ketik transmisi taktis..." autocomplete="off" required>
+                <button type="submit" class="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
+
+        <!-- BOTTOM NAVIGATION NAVBAR MELAYANG -->
+        <nav class="bottom-navbar" id="app-bottom-navbar">
+            <div class="nav-item active" data-target="tab-beranda">
+                <i class="fa-solid fa-house"></i>
+                <span>Beranda</span>
+            </div>
+            <div class="nav-item" data-target="tab-subbed">
+                <i class="fa-solid fa-star"></i>
+                <span>Subbed</span>
+            </div>
+            <div class="nav-item" id="navbar-upload-tab" data-target="tab-upload">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Upload</span>
+            </div>
+            <div class="nav-item" data-target="tab-deskripsi">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Deskripsi</span>
+            </div>
+            <div class="nav-item" data-target="tab-profil">
+                <i class="fa-solid fa-user"></i>
+                <span>Profil</span>
+            </div>
+        </nav>
+
+    </div>
+
+    <!-- ================= FIREBASE APPLICATION LOGIC MODUL ================= -->
+    <script type="module">
+        // Import Firebase modules direct through CDN Web SDK (v10)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // ======================================================================
+        // ⚠️ KONFIGURASI FIREBASE KAMU
+        // Tempelkan konfigurasi project dari Firebase Console milikmu di sini:
+        // ======================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDi6at8nAzVEabWeMLyjiv7t-V36lBFtQs",
+            authDomain: "vyrenix-hub-databases.firebaseapp.com",
+            projectId: "vyrenix-hub-databases",
+            storageBucket: "vyrenix-hub-databases.firebasestorage.app",
+            messagingSenderId: "592214427307",
+            appId: "1:592214427307:web:99faae7e76eae4e4aa99ee",
+            measurementId: "G-4K45BM633K"
+        };
+
+        // Initialize App Engines
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // Application Internal State Variables
+        let currentUser = null;
+        let userRole = "KRU"; // Default role
+        let userOtoritas = "CREW ACCESS / OBSERVER";
+        let activeTab = "tab-beranda";
+        let subbedCategories = JSON.parse(localStorage.getItem('vyrenix_subbed_cats')) || [];
+        let checkedInterests = JSON.parse(localStorage.getItem('vyrenix_user_interests')) || ["Geographical", "Astronomical"];
+        let isChatOpen = false;
+        let unreadChatCount = 0;
+
+        // Jukebox Jars System Mock Tracklist
+        const tracklist = [
+            { title: "Neon Drift memory - SciFi Chill", url: "https://cdn.discordapp.com/attachments/1218962424049307750/1505278909271507104/Neon_Drift_Memory.mp3?ex=6a0a0bba&is=6a08ba3a&hm=fa54445414fc5b015336dc8b771beabe7c4db6501463543d57406f18f7c47e26&" },
+            { title: "Luminous fracture - Vyrenix Ambient", url: "https://cdn.discordapp.com/attachments/1218962424049307750/1505278929248845975/Luminous_Fracture_.mp3?ex=6a0a0bbf&is=6a08ba3f&hm=9246f62fe4ea40731b1d095cc6c443e2ad4d2185952e1d036c2104fcef8fcedd&" }
+        ];
+        let currentTrackIdx = 0;
+        const audioElement = document.getElementById('core-audio-engine');
+
+        // ================= LAYER OTORISASI GATEWAY MECHANISM =================
+
+        document.getElementById('btn-google-login').addEventListener('click', async () => {
+    try {
+        const result = await signInWithPopup(auth, googleProvider);
+        currentUser = result.user; // Menyimpan data user global
+        
+        // Gak pakai ribet: Langsung munculkan pop-up input PIN untuk siapa pun
+        document.getElementById('ceo-pin-overlay').style.display = 'flex';
+        
+    } catch (err) {
+        console.error("Authentication Error:", err);
+        alert("Gagal melakukan login via Google Provider.");
+    }
+});
+
+
+                document.getElementById('btn-verify-pin').addEventListener('click', () => {
+            const pinVal = document.getElementById('input-ceo-pin').value;
+            
+            if (pinVal === "1307") {
+                document.getElementById('ceo-pin-overlay').style.display = 'none';
+                completeLoginSequence(currentUser, "CEO", "CEO ACCESS / FOUNDER");
+            } else {
+                alert("PIN Otoritas Salah! Mengalihkan ke Akses Observasi Kru.");
+                document.getElementById('ceo-pin-overlay').style.display = 'none';
+                completeLoginSequence(currentUser, "KRU", "CREW ACCESS / OBSERVER");
+            }
+        });
+        // ================= BYPASS LOGIC PROTOCOL =================
+
+        // JIKA TOMBOL SAMAR DIKLIK, MUNCULKAN OVERLAY LOGIN RAHASIA
+        document.getElementById('btn-trigger-bypass').addEventListener('click', () => {
+            document.getElementById('ceo-bypass-overlay').style.display = 'flex';
+        });
+
+        // TOMBOL BATAL
+        document.getElementById('btn-close-bypass').addEventListener('click', () => {
+            document.getElementById('ceo-bypass-overlay').style.display = 'none';
+        });
+
+        // PROSES VERIFIKASI AKUN MUTLAK CEO
+        document.getElementById('btn-submit-bypass').addEventListener('click', () => {
+            const userIn = document.getElementById('bypass-username').value;
+            const passIn = document.getElementById('bypass-password').value;
+            const pinIn = document.getElementById('bypass-pin').value;
+
+            // Kredensial Khusus Sesuai Request Kamu, Ju
+            if (userIn === "YuukiRadia" && passIn === "Ra14Ad5t5A" && pinIn === "1307") {
+                
+                document.getElementById('ceo-bypass-overlay').style.display = 'none';
+                document.getElementById('access-gate').style.display = 'none';
+                
+                // Membuat data user lokal fiktif agar sistem tidak eror
+                const mockCEOUser = {
+                    displayName: "Yuuki Radia",
+                    email: "sayaraju71@gmail.com"
+                };
+
+                // Panggil fungsi login bawaan webmu
+                completeLoginSequence(mockCEOUser, "CEO", "CEO ACCESS / FOUNDER");
+                
+                // Simpan di memori browser biar kalau di-refresh gak log out
+                sessionStorage.setItem('vyrenix_role', "CEO");
+                sessionStorage.setItem('vyrenix_auth_text', "CEO ACCESS / FOUNDER");
+                
+                alert("Otorisasi Berhasil. Selamat Datang Kembali, CEO!");
+            } else {
+                alert("Akses Ditolak! Kredensial Otoritas Tidak Valid.");
+            }
+        });
+
+        function completeLoginSequence(user, role, authorityText) {
+            currentUser = user;
+            userRole = role;
+            userOtoritas = authorityText;
+
+            // Save session role token
+            sessionStorage.setItem('vyrenix_role', role);
+            sessionStorage.setItem('vyrenix_auth_text', authorityText);
+
+            // Hide access gate overlay screen
+            document.getElementById('access-gate').style.display = 'none';
+            document.getElementById('app-bottom-navbar').style.display = 'grid';
+            document.getElementById('btn-toggle-chat').style.display = 'flex';
+
+            // Sync visual components layout profile info
+            updateProfileUI();
+            
+            // Start listening cloud repositories real-time
+            initRealtimeListeners();
+        }
+
+        // Monitor persistent authentication state adjustments
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const savedRole = sessionStorage.getItem('vyrenix_role') || "KRU";
+                const savedAuthText = sessionStorage.getItem('vyrenix_auth_text') || "CREW ACCESS / OBSERVER";
+                completeLoginSequence(user, savedRole, savedAuthText);
+            } else {
+                // Logged out / Rested state
+                document.getElementById('access-gate').style.display = 'flex';
+                document.getElementById('app-bottom-navbar').style.display = 'none';
+                document.getElementById('btn-toggle-chat').style.display = 'none';
+            }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                sessionStorage.clear();
+                window.location.reload();
+            });
+        });
+
+        // ================= RENDERING MANAGEMENT & PROFILE SYNC =================
+
+        function updateProfileUI() {
+            if (!currentUser) return;
+            
+            // Header display adjustments
+            const badgeEl = document.getElementById('user-role-badge');
+            badgeEl.innerText = userOtoritas;
+            badgeEl.className = `auth-badge mono-font ${userRole === 'CEO' ? 'badge-ceo' : 'badge-kru'}`;
+
+            // Tab Upload access guard limitation
+            const uploadTabEl = document.getElementById('navbar-upload-tab');
+            if (userRole === "CEO") {
+                uploadTabEl.classList.remove('hidden-tab');
+            } else {
+                uploadTabEl.classList.add('hidden-tab');
+            }
+
+            // Sync Tab Profil visuals info
+            document.getElementById('user-profile-img').src = currentUser.photoURL || 'https://via.placeholder.com/150';
+            document.getElementById('user-profile-name').innerText = currentUser.displayName || 'Anonymous Crew';
+            document.getElementById('user-profile-status').innerText = userOtoritas;
+
+            // Setup Profile Interests checkmarks defaults
+            const checkboxes = document.querySelectorAll('.interest-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = checkedInterests.includes(cb.value);
+                cb.addEventListener('change', () => {
+                    updateUserInterests();
+                });
+            });
+        }
+
+        function updateUserInterests() {
+            const checkboxes = document.querySelectorAll('.interest-checkbox');
+            checkedInterests = [];
+            checkboxes.forEach(cb => {
+                if (cb.checked) checkedInterests.push(cb.value);
+            });
+            localStorage.setItem('vyrenix_user_interests', JSON.stringify(checkedInterests));
+            // Force redraw feed cards layout instantly to mirror updated personalized algorithm
+            renderFeedsEngine();
+        }
+
+        // ================= BOTTOM NAVIGATION BAR SYSTEMS =================
+
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const targetTab = item.getAttribute('data-target');
+                
+                // Update navigation visual triggers active states
+                navItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                // Switch visible app blocks panels
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(targetTab).classList.add('active');
+                activeTab = targetTab;
+            });
+        });
+
+        // ================= MINI 4-DB TOP BUTTONS + FILTER IMPLEMENTATIONS =================
+
+        let categoryFilterValue = "ALL";
+        let tierFilterValue = "ALL";
+
+        // Click top database mini buttons updates active primary filter automatically
+        document.querySelectorAll('.db-btn-mini').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.db-btn-mini').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const selectedCategory = btn.getAttribute('data-cat');
+                categoryFilterValue = selectedCategory;
+                document.getElementById('filter-category').value = selectedCategory;
+                renderFeedsEngine();
+            });
+        });
+
+        document.getElementById('filter-category').addEventListener('change', (e) => {
+            categoryFilterValue = e.target.value;
+            // Sync mini buttons layout state too
+            document.querySelectorAll('.db-btn-mini').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-cat') === categoryFilterValue);
+            });
+            renderFeedsEngine();
+        });
+
+        document.getElementById('filter-tier').addEventListener('change', (e) => {
+            tierFilterValue = e.target.value;
+            renderFeedsEngine();
+        });
+
+        // ================= CORE DATA CLOUD LOGIC ENGINE & LISTENERS =================
+
+        let globalNodesCache = []; // Internal database cache holder arrays
+
+        function initRealtimeListeners() {
+            // 1. Realtime Data Nodes Feed Engine Listener
+            const nodesQuery = query(collection(db, "vyrenix_nodes"), orderBy("timestamp", "desc"));
+            onSnapshot(nodesQuery, (snapshot) => {
+                globalNodesCache = [];
+                snapshot.forEach(doc => {
+                    globalNodesCache.push({ id: doc.id, ...doc.data() });
+                });
+                renderFeedsEngine();
+            });
+
+            // 2. Realtime Chat Room Stream Line Listener
+            const chatQuery = query(collection(db, "vyrenix_chats"), orderBy("timestamp", "asc"));
+            onSnapshot(chatQuery, (snapshot) => {
+                const container = document.getElementById('chat-messages-container');
+                container.innerHTML = "";
+                
+                let localMsgCount = 0;
+                snapshot.forEach(doc => {
+                    const chatData = doc.data();
+                    renderChatBubble(chatData);
+                    localMsgCount++;
+                });
+
+                // Auto Scroll chat block interface base
+                container.scrollTop = container.scrollHeight;
+
+                // Handle unread badges indicators counts calculation
+                if (!isChatOpen && localMsgCount > 0) {
+                    unreadChatCount++;
+                    const unreadBadge = document.getElementById('unread-count-badge');
+                    unreadBadge.innerText = unreadChatCount;
+                    unreadBadge.style.display = 'block';
+                }
+            });
+        }
+
+        // Render feed layout matching categorization rules & personalization recommendation rules
+        function renderFeedsEngine() {
+            const mainFeedTarget = document.getElementById('main-feed-target');
+            const recFeedTarget = document.getElementById('rec-feed-target');
+            const recZone = document.getElementById('rec-zone');
+            const subbedFeedTarget = document.getElementById('subbed-feed-target');
+
+            mainFeedTarget.innerHTML = "";
+            recFeedTarget.innerHTML = "";
+            subbedFeedTarget.innerHTML = "";
+
+            let recommendationAdded = false;
+
+            globalNodesCache.forEach(node => {
+                // Apply strict structural dropdown selection sorting matrix
+                const matchCategory = (categoryFilterValue === "ALL" || node.category === categoryFilterValue);
+                const matchTier = (tierFilterValue === "ALL" || node.tier === tierFilterValue);
+
+                if (matchCategory && matchTier) {
+                    const cardElement = createNodeCardDOM(node);
+
+                    // ALGORITMA REKOMENDASI KONTEN: 
+                    // Jika kategori node masuk dalam minat eksplorasi kru yang dicentang di profil,
+                    // masukkan ke panel Rekomendasi di baris paling atas.
+                    if (checkedInterests.includes(node.category)) {
+                        const recCardElement = createNodeCardDOM(node, true); // add recommended badge state
+                        recFeedTarget.appendChild(recCardElement);
+                        recommendationAdded = true;
+                    }
+
+                    // Tambahkan ke aliran pakan utama
+                    mainFeedTarget.appendChild(cardElement);
+                }
+
+                // Append matching subbed bookmarked fields categories to Tab Subbed too
+                if (subbedCategories.includes(node.category)) {
+                    const subbedCardElement = createNodeCardDOM(node);
+                    subbedFeedTarget.appendChild(subbedCardElement);
+                }
+            });
+
+            // Manage recommendation container visibility block state frame
+            recZone.style.display = recommendationAdded ? 'block' : 'none';
+            
+            if (subbedFeedTarget.children.length === 0) {
+                subbedFeedTarget.innerHTML = `<div class="mono-font" style="font-size:12px; color:var(--text-muted); text-align:center; padding:30px 0;">Belum ada kategori ter-monitor yang di-bookmark.</div>`;
+            }
+            if (mainFeedTarget.children.length === 0) {
+                mainFeedTarget.innerHTML = `<div class="mono-font" style="font-size:12px; color:var(--text-muted); text-align:center; padding:30px 0;">Tidak ada log arsip data yang cocok dengan kriteria filter.</div>`;
+            }
+        }
+
+        // Node card template generation node factory
+        function createNodeCardDOM(node, isRecommendedBadge = false) {
+            const card = document.createElement('div');
+            card.className = "node-card";
+            card.setAttribute('data-id', node.id);
+
+            // Tier color mapping converter
+            let tierClassColor = 'var(--tier-d)';
+            if (node.tier === 'SSS+') tierClassColor = 'var(--tier-sss)';
+            if (node.tier === 'S') tierClassColor = 'var(--tier-s)';
+            if (node.tier === 'A') tierClassColor = 'var(--tier-a)';
+            if (node.tier === 'B') tierClassColor = 'var(--tier-b)';
+
+            const isBookmarked = subbedCategories.includes(node.category);
+
+            card.innerHTML = `
+                <button class="delete-node-btn" style="display: ${userRole === 'CEO' ? 'flex' : 'none'};" onclick="window.deleteVyrenixNode('${node.id}')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                ${node.imageUrl ? `<img src="${node.imageUrl}" class="node-img" alt="Arsip Log">` : ''}
+                <div class="node-body">
+                    <div class="node-header-info">
+                        <div>
+                            <span class="node-caption">${node.caption}</span>
+                            <div class="node-badges" style="margin-top:4px;">
+                                <span class="badge-tag" style="background:${tierClassColor}">TIER ${node.tier}</span>
+                                <span class="badge-tag" style="background:var(--primary)">${node.category}</span>
+                                ${isRecommendedBadge ? `<span class="badge-tag" style="background:#f59e0b;"><i class="fa-solid fa-bolt"></i> DIREKOMENDASIKAN</span>` : ''}
+                            </div>
+                        </div>
+                        <button class="bookmark-node-btn ${isBookmarked ? 'active' : ''}" onclick="window.toggleCategoryBookmark('${node.category}')" title="Monitor Kategori Ini">
+                            <i class="fa-solid fa-star"></i>
+                        </button>
+                    </div>
+                    <div class="node-desc mono-font">${node.description}</div>
+                    
+                    <!-- Integrated Comment Section Architecture -->
+                    <div class="comments-section">
+                        <div class="comments-count" id="count-${node.id}">Komentar (0)</div>
+                        <div class="comments-list" id="comments-list-${node.id}"></div>
+                        <div class="comment-input-box">
+                            <input type="text" class="comment-field" id="input-field-${node.id}" placeholder="Tulis komentar transmisi log...">
+                            <button class="comment-submit-btn" onclick="window.submitCommentNode('${node.id}')">Kirim</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Draw real-time comments internal listeners loop framework
+            const commentsRef = query(collection(db, `vyrenix_nodes/${node.id}/comments`), orderBy("timestamp", "asc"));
+            onSnapshot(commentsRef, (snapshot) => {
+                const commListTarget = card.querySelector(`#comments-list-${node.id}`);
+                const commCountTarget = card.querySelector(`#count-${node.id}`);
+                if (!commListTarget) return;
+
+                commListTarget.innerHTML = "";
+                let count = 0;
+
+                snapshot.forEach(cDoc => {
+                    count++;
+                    const cData = cDoc.data();
+                    const cId = cDoc.id;
+
+                    const commItem = document.createElement('div');
+                    commItem.className = "comment-item";
+                    commItem.innerHTML = `
+                        <div class="comment-meta">
+                            <img src="${cData.authorAvatar || 'https://via.placeholder.com/50'}" class="comment-avatar">
+                            <span class="comment-author">${cData.authorName}</span>
+                            <span class="comment-role-badge ${cData.authorRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}">${cData.authorRole}</span>
+                        </div>
+                        <div class="comment-text">${cData.text}</div>
+                        <div class="comment-actions">
+                            <span class="comment-action-btn" onclick="window.likeCommentAction('${node.id}', '${cId}', ${cData.likes || 0})">
+                                <i class="fa-solid fa-thumbs-up"></i> Liked (${cData.likes || 0})
+                            </span>
+                            <span class="comment-action-btn" onclick="window.triggerReplyPrompt('${node.id}', '${cId}')">
+                                <i class="fa-solid fa-reply"></i> Balas
+                            </span>
+                        </div>
+                        <div class="replies-list" id="replies-container-${cId}"></div>
+                    `;
+
+                    // Render sub-replies Level 2 architecture matching framework rules
+                    const repliesRef = query(collection(db, `vyrenix_nodes/${node.id}/comments/${cId}/replies`), orderBy("timestamp", "asc"));
+                    onSnapshot(repliesRef, (rSnapshot) => {
+                        const replyTarget = commItem.querySelector(`#replies-container-${cId}`);
+                        if (!replyTarget) return;
+                        replyTarget.innerHTML = "";
+
+                        rSnapshot.forEach(rDoc => {
+                            const rData = rDoc.data();
+                            const replyItem = document.createElement('div');
+                            replyItem.className = "reply-item";
+                            replyItem.innerHTML = `
+                                <div class="comment-meta">
+                                    <img src="${rData.authorAvatar || 'https://via.placeholder.com/50'}" class="comment-avatar" style="width:14px; height:14px;">
+                                    <span class="comment-author" style="font-size:10px;">${rData.authorName}</span>
+                                    <span class="comment-role-badge ${rData.authorRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}" style="font-size:7px; padding:0 2px;">${rData.authorRole}</span>
+                                </div>
+                                <div class="comment-text" style="font-size:11px; margin:0;">${rData.text}</div>
+                            `;
+                            replyTarget.appendChild(replyItem);
+                        });
+                    });
+
+                    commListTarget.appendChild(commItem);
+                });
+
+                commCountTarget.innerText = `Komentar (${count})`;
+            });
+
+            return card;
+        }
+
+        // Globalized Scope Utility Operations Triggers for DOM execution compatibility
+        window.toggleCategoryBookmark = function(categoryName) {
+            if (subbedCategories.includes(categoryName)) {
+                subbedCategories = subbedCategories.filter(item => item !== categoryName);
+            } else {
+                subbedCategories.push(categoryName);
+            }
+            localStorage.setItem('vyrenix_subbed_cats', JSON.stringify(subbedCategories));
+            renderFeedsEngine();
+        };
+
+        window.deleteVyrenixNode = async function(nodeId) {
+            if (confirm("Apakah anda yakin ingin menghapus log arsip data laboratorium ini permanen dari cloud server?")) {
+                try {
+                    await deleteDoc(doc(db, "vyrenix_nodes", nodeId));
+                } catch (e) {
+                    alert("Gagal menghapus log data cloud server.");
+                }
+            }
+        };
+
+        window.submitCommentNode = async function(nodeId) {
+            const inputEl = document.getElementById(`input-field-${nodeId}`);
+            const textVal = inputEl.value.trim();
+            if (!textVal) return;
+
+            try {
+                await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments`), {
+                    text: textVal,
+                    authorName: currentUser.displayName,
+                    authorAvatar: currentUser.photoURL,
+                    authorRole: userRole,
+                    likes: 0,
+                    timestamp: Date.now()
+                });
+                inputEl.value = "";
+            } catch (err) {
+                console.error("Comment submit failed:", err);
+            }
+        };
+
+        window.likeCommentAction = async function(nodeId, commentId, currentLikes) {
+            const commentRef = doc(db, `vyrenix_nodes/${nodeId}/comments`, commentId);
+            await updateDoc(commentRef, {
+                likes: currentLikes + 1
+            });
+        };
+
+        window.triggerReplyPrompt = async function(nodeId, commentId) {
+            const replyText = prompt("Masukkan pesan balasan anda:");
+            if (!replyText || !replyText.trim()) return;
+
+            try {
+                await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments/${commentId}/replies`), {
+                    text: replyText.trim(),
+                    authorName: currentUser.displayName,
+                    authorAvatar: currentUser.photoURL,
+                    authorRole: userRole,
+                    timestamp: Date.now()
+                });
+            } catch (e) {
+                console.error("Failed storing sub-level replies framework:", e);
+            }
+        };
+
+        // ================= NEW UPLOADER FORM LOGIC SUBMIT (CEO ACCESS ONLY) =================
+
+        let nodeImageBase64 = "";
+
+        const fileZoneBtn = document.getElementById('btn-trigger-file');
+        const hiddenFileInput = document.getElementById('input-node-file');
+
+        fileZoneBtn.addEventListener('click', () => hiddenFileInput.click());
+        hiddenFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                nodeImageBase64 = evt.target.result;
+                const previewImg = document.getElementById('image-upload-preview');
+                previewImg.src = nodeImageBase64;
+                previewImg.style.display = 'block';
+                fileZoneBtn.querySelector('i').style.display = 'none';
+                fileZoneBtn.querySelector('span').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('btn-submit-node').addEventListener('click', async () => {
+            if (userRole !== "CEO") {
+                alert("Otoritas Penolakan! Hanya tingkat jabatan CEO yang diizinkan mengunggah arsip.");
+                return;
+            }
+
+            const caption = document.getElementById('input-node-caption').value.trim();
+            const category = document.getElementById('input-node-category').value;
+            const tier = document.getElementById('input-node-tier').value;
+            const description = document.getElementById('input-node-desc').value.trim();
+
+            if (!caption || !description) {
+                alert("Harap lengkapi isi komponen judul data dan deskripsi log!");
+                return;
+            }
+
+            document.getElementById('btn-submit-node').innerText = "Transmitting to Space Cloud Database...";
+            document.getElementById('btn-submit-node').disabled = true;
+
+            try {
+                await addDoc(collection(db, "vyrenix_nodes"), {
+                    caption,
+                    category,
+                    tier,
+                    description,
+                    imageUrl: nodeImageBase64 || "", // Stores dataURI string cleanly inside document structure maps
+                    timestamp: Date.now()
+                });
+
+                // Reset forms fields
+                document.getElementById('form-node-uploader').reset();
+                document.getElementById('image-upload-preview').style.display = 'none';
+                fileZoneBtn.querySelector('i').style.display = 'block';
+                fileZoneBtn.querySelector('span').style.display = 'block';
+                nodeImageBase64 = "";
+
+                document.getElementById('btn-submit-node').innerText = "Unggah ke Cloud Server";
+                document.getElementById('btn-submit-node').disabled = false;
+
+                // Return back to core main feed system dashboard
+                document.querySelector('[data-target="tab-beranda"]').click();
+
+            } catch (err) {
+                alert("Penyimpanan repositori data gagal terkirim.");
+                document.getElementById('btn-submit-node').innerText = "Unggah ke Cloud Server";
+                document.getElementById('btn-submit-node').disabled = false;
+            }
+        });
+
+        // ================= REAL-TIME FLOATING CHAT CONTROLLERS =================
+
+        const chatToggleBtn = document.getElementById('btn-toggle-chat');
+        const popupChatWindow = document.getElementById('popup-chat-window');
+
+        chatToggleBtn.addEventListener('click', () => {
+            if (!isChatOpen) {
+                popupChatWindow.style.display = 'flex';
+                isChatOpen = true;
+                // Clear state notifications counters badge frame
+                unreadChatCount = 0;
+                document.getElementById('unread-count-badge').style.display = 'none';
+                
+                // Force refocus alignment scroll down frame container layout
+                const container = document.getElementById('chat-messages-container');
+                container.scrollTop = container.scrollHeight;
+            } else {
+                popupChatWindow.style.display = 'none';
+                isChatOpen = false;
+            }
+        });
+
+        document.getElementById('btn-close-chat').addEventListener('click', () => {
+            popupChatWindow.style.display = 'none';
+            isChatOpen = false;
+        });
+
+        document.getElementById('form-chat-sender').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const chatField = document.getElementById('input-chat-msg');
+            const messageText = chatField.value.trim();
+            if (!messageText || !currentUser) return;
+
+            try {
+                await addDoc(collection(db, "vyrenix_chats"), {
+                    text: messageText,
+                    senderUid: currentUser.uid,
+                    senderName: currentUser.displayName,
+                    senderRole: userRole,
+                    timestamp: Date.now()
+                });
+                chatField.value = "";
+            } catch (err) {
+                console.error("Transmitting message crash loop:", err);
+            }
+        });
+
+        function renderChatBubble(chat) {
+            const container = document.getElementById('chat-messages-container');
+            const isSelf = chat.senderUid === currentUser?.uid;
+
+            const bubble = document.createElement('div');
+            bubble.className = `chat-bubble ${isSelf ? 'self' : 'other'}`;
+            bubble.innerHTML = `
+                <div class="chat-user-meta">
+                    <span>${chat.senderName}</span>
+                    <span class="comment-role-badge ${chat.senderRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}" style="font-size:7px; padding:0 3px;">${chat.senderRole}</span>
+                </div>
+                <div>${chat.text}</div>
+            `;
+            container.appendChild(bubble);
+        }
+
+        // ================= INTERNAL SHIP JUKEBOX CONTROLLERS =================
+
+        const playToggleBtn = document.getElementById('juke-play-toggle');
+        const trackTitleSpan = document.getElementById('current-track-title');
+
+        function loadTrackEngine(idx) {
+            audioElement.src = tracklist[idx].url;
+            trackTitleSpan.innerText = tracklist[idx].title;
+        }
+
+        playToggleBtn.addEventListener('click', () => {
+            if (audioElement.paused) {
+                audioElement.play().then(() => {
+                    playToggleBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+                    playToggleBtn.classList.add('playing');
+                }).catch(err => {
+                    alert("Interaksi browser diblokir! Silakan klik kembali atau ganti lagu untuk memicu pemutaran manual.");
+                });
+            } else {
+                audioElement.pause();
+                playToggleBtn.innerHTML = `<i class="fa-solid fa-play"></i>`;
+                playToggleBtn.classList.remove('playing');
+            }
+        });
+
+        document.getElementById('juke-next-track').addEventListener('click', () => {
+            currentTrackIdx = (currentTrackIdx + 1) % tracklist.length;
+            loadTrackEngine(currentTrackIdx);
+            audioElement.play().then(() => {
+                playToggleBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+                playToggleBtn.classList.add('playing');
+            });
+        });
+
+        // Seed initial mock tracking sequence files data
+        loadTrackEngine(currentTrackIdx);
+
+    </script>
+</body>
+</html>
