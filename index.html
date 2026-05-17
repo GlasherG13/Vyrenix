@@ -1280,49 +1280,47 @@
             </div>
         </section>
 
-        <div class="bottom-unified-panel" id="app-bottom-panel">
-            <nav class="bottom-navbar">
-                <div class="nav-item active" data-target="tab-beranda">
-                    <i class="fa-solid fa-house"></i>
-                    <span>Beranda</span>
-                </div>
-                <div class="nav-item" data-target="tab-subbed">
-                    <i class="fa-solid fa-star"></i>
-                    <span>Subbed</span>
-                </div>
-                <div class="nav-item" id="navbar-upload-tab" data-target="tab-upload">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <span>Upload</span>
-                </div>
-                <div class="nav-item" data-target="tab-deskripsi">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span>Deskripsi</span>
-                </div>
-                <div class="nav-item" data-target="tab-profil">
-                    <i class="fa-solid fa-user"></i>
-                    <span>Profil</span>
-                </div>
-            </nav>
-        </div>
-
-        <button class="floating-chat-trigger" id="btn-floating-chat">
-            <i class="fa-solid fa-comments"></i>
-        </button>
-
-        <div class="chat-popup-window" id="popup-chat-window">
-            <div class="chat-popup-header">
-                <span class="cyber-font" style="font-size: 11px; font-weight: bold;"><i class="fa-solid fa-network-wired"></i> CORE TRANSMISSION CHAT</span>
-                <button id="btn-close-chat-popup" style="background:none; border:none; color:white; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+    </div> <div class="bottom-unified-panel" id="app-bottom-panel">
+        <nav class="bottom-navbar">
+            <div class="nav-item active" data-target="tab-beranda">
+                <i class="fa-solid fa-house"></i>
+                <span>Beranda</span>
             </div>
-            <div class="chat-popup-body" id="chat-messages-container"></div>
-            <div class="chat-popup-footer">
-                <form class="mini-chat-bar" id="form-chat-sender" onsubmit="return false;">
-                    <input type="text" class="mini-chat-input" id="input-chat-msg" placeholder="Transmisi taktis..." autocomplete="off" required>
-                    <button type="submit" class="mini-chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
-                </form>
+            <div class="nav-item" data-target="tab-subbed">
+                <i class="fa-solid fa-star"></i>
+                <span>Subbed</span>
             </div>
-        </div>
+            <div class="nav-item" id="navbar-upload-tab" data-target="tab-upload">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Upload</span>
+            </div>
+            <div class="nav-item" data-target="tab-deskripsi">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Deskripsi</span>
+            </div>
+            <div class="nav-item" data-target="tab-profil">
+                <i class="fa-solid fa-user"></i>
+                <span>Profil</span>
+            </div>
+        </nav>
+    </div>
 
+    <button class="floating-chat-trigger" id="btn-floating-chat">
+        <i class="fa-solid fa-comments"></i>
+    </button>
+
+    <div class="chat-popup-window" id="popup-chat-window">
+        <div class="chat-popup-header">
+            <span class="cyber-font" style="font-size: 11px; font-weight: bold;"><i class="fa-solid fa-network-wired"></i> CORE TRANSMISSION CHAT</span>
+            <button id="btn-close-chat-popup" style="background:none; border:none; color:white; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="chat-popup-body" id="chat-messages-container"></div>
+        <div class="chat-popup-footer">
+            <form class="mini-chat-bar" id="form-chat-sender" onsubmit="return false;">
+                <input type="text" class="mini-chat-input" id="input-chat-msg" placeholder="Transmisi taktis..." autocomplete="off" required>
+                <button type="submit" class="mini-chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
     </div>
 
     <script type="module">
