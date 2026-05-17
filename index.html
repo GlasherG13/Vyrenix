@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vyrenix Core App v12.0</title>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -80,7 +78,7 @@
             border-left: 1px solid var(--border);
             border-right: 1px solid var(--border);
             position: relative;
-            padding-bottom: 90px; /* Space for bottom navbar */
+            padding-bottom: 110px; /* FIXED: Added extra space so posts won't get cut off by fixed navbar */
             z-index: 1;
             display: flex;
             flex-direction: column;
@@ -337,7 +335,6 @@
         }
 
         /* --- TAB BERANDA: REORGANIZED --- */
-        /* 4 Database Mini Buttons at Top */
         .db-grid-mini {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -408,7 +405,7 @@
             border-radius: 10px;
             padding: 12px;
             margin-bottom: 20px;
-            display: none; /* Shown dynamically via JS */
+            display: none;
         }
 
         .rec-header {
@@ -489,7 +486,7 @@
             border-left: 2px solid var(--border);
         }
 
-        /* Delete Node Trigger (CEO Only) */
+        /* Delete Node Trigger */
         .delete-node-btn {
             position: absolute;
             top: 10px; right: 10px;
@@ -498,7 +495,7 @@
             border: none;
             width: 24px; height: 24px;
             border-radius: 50%;
-            display: none; /* Controlled in JS based on role */
+            display: none;
             justify-content: center;
             align-items: center;
             cursor: pointer;
@@ -597,7 +594,7 @@
         }
         .comment-action-btn:hover { color: var(--primary); }
 
-        /* Replies - Nesting level 2 */
+        /* Replies */
         .replies-list {
             margin-top: 6px;
             padding-left: 12px;
@@ -734,12 +731,48 @@
             margin-bottom: 4px;
         }
 
+        /* NEW: Faction Tag Styling */
+        .profile-faction-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .faction-ie {
+            background: rgba(0, 210, 255, 0.1);
+            color: #0088cc;
+            border: 1px dashed var(--accent);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+        .faction-member {
+            background: #f1f5f9;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
         .profile-status {
             font-size: 11px;
             color: var(--primary);
             font-weight: bold;
             text-transform: uppercase;
             margin-bottom: 16px;
+        }
+
+        /* NEW: Profile Editor Inputs Area */
+        .profile-editor-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            text-align: left;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         /* Personalization Interests Panel */
@@ -807,13 +840,13 @@
         .chat-toggle-btn {
             position: fixed;
             bottom: 85px;
-            right: calc(50% - 280px); /* Position dynamically aligned relative to center 600px wrapper */
+            right: calc(50% - 280px);
             width: 52px; height: 52px;
             background: var(--primary);
             color: white;
             border: none;
             border-radius: 50%;
-            display: none; /* Visible after access gate passes */
+            display: none;
             justify-content: center;
             align-items: center;
             cursor: pointer;
@@ -972,7 +1005,7 @@
         /* ---------------- BOTTOM NAVIGATION NAVBAR ---------------- */
         .bottom-navbar {
             position: fixed;
-            bottom: 42px; /* 👈 Sudah dinaikkan agar aman dari iklan */
+            bottom: 16px; /* FIXED: Netap rapi di layar hp dengan floating style */
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 32px);
@@ -983,10 +1016,10 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
             border-radius: 30px;
-            display: none; /* Controlled via Access Gate */
+            display: none;
             grid-template-columns: repeat(5, 1fr);
             padding: 0 10px;
-            z-index: 99999; /* 👈 Diubah jadi tertinggi agar anti-tertutup */
+            z-index: 99999;
         }
 
         .nav-item {
@@ -1020,32 +1053,29 @@
 
     <div class="planet-bg"></div>
 
-    <!-- ACCESS GATE WINDOW -->
     <div id="access-gate">
         <div class="gate-panel">
-            <div class="gate-logo"><i class="fa-solid : fa-shield-halved"></i></div>
+            <div class="gate-logo"><i class="fa-solid fa-shield-halved"></i></div>
             <div class="gate-title cyber-font">VYRENIX ACCESS GATE</div>
             <div class="gate-subtitle mono-font">CORE ARCHIVE DECRYPTION PLATFORM V12.0</div>
             
             <button class="google-login-btn" id="btn-google-login">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_"Circles"_Logo,.svg" alt="G" width="18" height="18" style="display:none;">
                 <i class="fa-brands fa-google" style="color: #4285F4; font-size: 16px;"></i>
                 Masuk dengan Akun Google
             </button>
 
-            <!-- PIN Otoritas CEO Verification Overlay -->
-                <div id="ceo-bypass-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; flex-direction: column;">
-        <div style="background: #111; border: 2px solid #00d2ff; padding: 25px; border-radius: 10px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 0 15px #00d2ff;">
-            <h3 style="color: #00d2ff; margin-bottom: 15px; font-family: monospace;">VYRENIX BYPASS GATE</h3>
-            <input type="text" id="bypass-username" placeholder="Username" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 5px;">
-            <input type="password" id="bypass-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 5px;">
-            <input type="password" id="bypass-pin" placeholder="Secure PIN" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: #fff; border-radius: 5px; text-align: center;">
-            <button id="btn-submit-bypass" style="width: 100%; padding: 10px; background: #00d2ff; color: #000; border: none; border-radius: 5px; font-weight: bold;">VERIFIKASI OTORITAS</button>
-            <button id="btn-close-bypass" style="width: 100%; padding: 8px; margin-top: 5px; background: transparent; color: #aaa; border: none; font-size: 12px;">Batal</button>
-        </div>
-    </div>
+            <div id="ceo-bypass-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; flex-direction: column;">
+                <div style="background: #111; border: 2px solid #00d2ff; padding: 25px; border-radius: 10px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 0 15px #00d2ff;">
+                    <h3 style="color: #00d2ff; margin-bottom: 15px; font-family: monospace;">VYRENIX BYPASS GATE</h3>
+                    <input type="text" id="bypass-username" placeholder="Username" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 5px;">
+                    <input type="password" id="bypass-password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 5px;">
+                    <input type="password" id="bypass-pin" placeholder="Secure PIN" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: #fff; border-radius: 5px; text-align: center;">
+                    <button id="btn-submit-bypass" style="width: 100%; padding: 10px; background: #00d2ff; color: #000; border: none; border-radius: 5px; font-weight: bold;">VERIFIKASI OTORITAS</button>
+                    <button id="btn-close-bypass" style="width: 100%; padding: 8px; margin-top: 5px; background: transparent; color: #aaa; border: none; font-size: 12px;">Batal</button>
+                </div>
+            </div>
 
-    <button id="btn-trigger-bypass" style="background: transparent; border: none; color: #1a1a1a; font-size: 11px; margin-top: 20px; display: block; width: 100%;">[ Secure Gateway Access ]</button>
+            <button id="btn-trigger-bypass" style="background: transparent; border: none; color: #1a1a1a; font-size: 11px; margin-top: 20px; display: block; width: 100%;">[ Secure Gateway Access ]</button>
 
             <div class="pin-overlay" id="ceo-pin-overlay">
                 <div class="gate-title cyber-font" style="font-size:16px; margin-bottom:10px;">DEKRIPSI OTORITAS CEO</div>
@@ -1056,10 +1086,8 @@
         </div>
     </div>
 
-    <!-- MAIN APP STRUCTURE -->
     <div class="app-container">
         
-        <!-- HEADER MODULE -->
         <header>
             <div class="header-top">
                 <div class="brand">
@@ -1069,7 +1097,6 @@
                 <div id="user-role-badge" class="auth-badge mono-font badge-kru">GUEST ACCESS</div>
             </div>
             
-            <!-- JUKEBOX COMPONENT -->
             <div class="jukebox">
                 <div class="track-info">
                     <i class="fa-solid fa-compact-disc fa-spin"></i>
@@ -1083,11 +1110,7 @@
             <audio id="core-audio-engine" loop></audio>
         </header>
 
-        <!-- ================= TAB CONTENT SYSTEM ================= -->
-
-        <!-- TAB 1: BERANDA -->
         <main id="tab-beranda" class="tab-content active">
-            <!-- 4 Database Mini Buttons Built Top -->
             <div class="db-grid-mini mono-font">
                 <div class="db-btn-mini" data-cat="Geographical">
                     <i class="fa-solid fa-earth-asia"></i>
@@ -1107,7 +1130,6 @@
                 </div>
             </div>
 
-            <!-- Filters System Row -->
             <div class="filter-container">
                 <span class="filter-label mono-font"><i class="fa-solid fa-filter"></i> Filter:</span>
                 <select id="filter-category" class="filter-select">
@@ -1127,29 +1149,23 @@
                 </select>
             </div>
 
-            <!-- Dynamic Recommendation Zone -->
             <div class="recommendation-zone" id="rec-zone">
                 <div class="rec-header cyber-font"><i class="fa-solid fa-bolt"></i> REKOMENDASI KONTEN UNTUK ANDA</div>
                 <div class="feed-container" id="rec-feed-target"></div>
             </div>
 
-            <!-- Main Data Feed List -->
             <div class="feed-container" id="main-feed-target">
-                <!-- Loaded dynamically -->
-            </div>
+                </div>
         </main>
 
-        <!-- TAB 2: SUBBED (BOOKMARKS) -->
         <section id="tab-subbed" class="tab-content">
             <div class="rec-header cyber-font" style="border:none; padding:0; margin-bottom:14px;">
                 <i class="fa-solid fa-star" style="color: #eab308;"></i> NODE KATEGORI TERMONITOR
             </div>
             <div class="feed-container" id="subbed-feed-target">
-                <!-- Saved items render here -->
-            </div>
+                </div>
         </section>
 
-        <!-- TAB 3: UPLOAD (CEO EXCLUSIVE) -->
         <section id="tab-upload" class="tab-content">
             <div class="rec-header cyber-font" style="border:none; padding:0; margin-bottom:14px;">
                 <i class="fa-solid fa-cloud-arrow-up"></i> UNGGAN LOG ARSIP LABORATORIUM
@@ -1197,7 +1213,6 @@
             </form>
         </section>
 
-        <!-- TAB 4: DESKRIPSI -->
         <section id="tab-deskripsi" class="tab-content">
             <div class="desc-text">
                 <div class="rec-header cyber-font" style="border:none; padding:0; margin-bottom:14px;">
@@ -1211,16 +1226,37 @@
             </div>
         </section>
 
-        <!-- TAB 5: PROFIL & PERSONALISASI INTERESTS -->
         <section id="tab-profil" class="tab-content">
             <div class="profile-card">
                 <div class="profile-avatar-wrapper">
                     <img src="" id="user-profile-img" class="profile-avatar" alt="Avatar">
                 </div>
                 <div id="user-profile-name" class="profile-name">Loading Profile...</div>
+                
+                <div id="user-profile-faction" class="profile-faction-tag faction-member">-</div>
+                
                 <div id="user-profile-status" class="profile-status mono-font">-</div>
                 
-                <!-- Interests Checklist Panel for recommendation architecture -->
+                <div class="profile-editor-box">
+                    <div class="interests-title mono-font"><i class="fa-solid fa-user-gear"></i> Modifikasi Data Kru</div>
+                    <input type="text" id="edit-profile-name" class="form-control" placeholder="Nama Baru Transmisi..." style="padding: 6px 10px; font-size: 12px;">
+                    <input type="text" id="edit-profile-avatar" class="form-control" placeholder="URL Link Avatar Baru..." style="padding: 6px 10px; font-size: 12px;">
+                    <button class="form-submit-btn" id="btn-update-profile" style="padding: 6px; font-size: 10px;">Simpan Perubahan</button>
+                </div>
+
+                <div class="interests-panel" id="faction-selection-panel">
+                    <div class="interests-title mono-font"><i class="fa-solid fa-shuttle-space"></i> Registrasi Aliansi Fraksi</div>
+                    <div class="form-group">
+                        <select id="select-user-faction" class="form-control" style="padding: 6px 10px; font-size: 12px;">
+                            <option value="Belum Berfraksi">-- Pilih Salah Satu Fraksi --</option>
+                            <option value="Astra Voyager">Astra Voyager</option>
+                            <option value="Cyber Sentinel">Cyber Sentinel</option>
+                            <option value="Void Vanguard">Void Vanguard</option>
+                            <option value="Nebula Ranger">Nebula Ranger</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="interests-panel">
                     <div class="interests-title mono-font"><i class="fa-solid fa-heart"></i> Minat Eksplorasi Kru</div>
                     <div class="interests-grid">
@@ -1247,7 +1283,6 @@
             </div>
         </section>
 
-        <!-- ---------------- FLOATING ENCRYPTED CHAT ROOM ---------------- -->
         <button class="chat-toggle-btn" id="btn-toggle-chat">
             <i class="fa-solid fa-message"></i>
             <span class="chat-unread-badge" id="unread-count-badge">0</span>
@@ -1259,15 +1294,13 @@
                 <button class="chat-close-btn" id="btn-close-chat"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="chat-messages" id="chat-messages-container">
-                <!-- Real-time chat elements loaded here -->
-            </div>
+                </div>
             <form class="chat-input-area" id="form-chat-sender" onsubmit="return false;">
                 <input type="text" class="chat-input" id="input-chat-msg" placeholder="Ketik transmisi taktis..." autocomplete="off" required>
                 <button type="submit" class="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
             </form>
         </div>
 
-        <!-- BOTTOM NAVIGATION NAVBAR MELAYANG -->
         <nav class="bottom-navbar" id="app-bottom-navbar">
             <div class="nav-item active" data-target="tab-beranda">
                 <i class="fa-solid fa-house"></i>
@@ -1293,17 +1326,13 @@
 
     </div>
 
-    <!-- ================= FIREBASE APPLICATION LOGIC MODUL ================= -->
     <script type="module">
         // Import Firebase modules direct through CDN Web SDK (v10)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // ======================================================================
-        // ⚠️ KONFIGURASI FIREBASE KAMU
-        // Tempelkan konfigurasi project dari Firebase Console milikmu di sini:
-        // ======================================================================
+        // Konfigurasi Database Real-time Vyrenix Kamu
         const firebaseConfig = {
             apiKey: "AIzaSyDi6at8nAzVEabWeMLyjiv7t-V36lBFtQs",
             authDomain: "vyrenix-hub-databases.firebaseapp.com",
@@ -1322,7 +1351,7 @@
 
         // Application Internal State Variables
         let currentUser = null;
-        let userRole = "KRU"; // Default role
+        let userRole = "KRU"; 
         let userOtoritas = "CREW ACCESS / OBSERVER";
         let activeTab = "tab-beranda";
         let subbedCategories = JSON.parse(localStorage.getItem('vyrenix_subbed_cats')) || [];
@@ -1330,7 +1359,7 @@
         let isChatOpen = false;
         let unreadChatCount = 0;
 
-        // Jukebox Jars System Mock Tracklist
+        // Jukebox Tracklist
         const tracklist = [
             { title: "Neon Drift memory - SciFi Chill", url: "https://cdn.discordapp.com/attachments/1218962424049307750/1505278909271507104/Neon_Drift_Memory.mp3?ex=6a0a0bba&is=6a08ba3a&hm=fa54445414fc5b015336dc8b771beabe7c4db6501463543d57406f18f7c47e26&" },
             { title: "Luminous fracture - Vyrenix Ambient", url: "https://cdn.discordapp.com/attachments/1218962424049307750/1505278929248845975/Luminous_Fracture_.mp3?ex=6a0a0bbf&is=6a08ba3f&hm=9246f62fe4ea40731b1d095cc6c443e2ad4d2185952e1d036c2104fcef8fcedd&" }
@@ -1338,24 +1367,32 @@
         let currentTrackIdx = 0;
         const audioElement = document.getElementById('core-audio-engine');
 
-        // ================= LAYER OTORISASI GATEWAY MECHANISM =================
+        // ================= JALUR LOGIN UTAMA (ANTI KEPENTAL/KEDIP DI HP) =================
 
         document.getElementById('btn-google-login').addEventListener('click', async () => {
-    try {
-        const result = await signInWithPopup(auth, googleProvider);
-        currentUser = result.user; // Menyimpan data user global
-        
-        // Gak pakai ribet: Langsung munculkan pop-up input PIN untuk siapa pun
-        document.getElementById('ceo-pin-overlay').style.display = 'flex';
-        
-    } catch (err) {
-        console.error("Authentication Error:", err);
-        alert("Gagal melakukan login via Google Provider.");
-    }
-});
+            try {
+                // DIUBAH KE METODE REDIRECT AGAR DIHP TIDAK KEPENTAL browser
+                await signInWithRedirect(auth, googleProvider);
+            } catch (err) {
+                console.error("Authentication Error:", err);
+                alert("Gagal memicu pengalihan login Google Auth.");
+            }
+        });
 
+        // PENANGKAP DATA SETELAH PROSES REDIRECT GOOGLE KELAR
+        getRedirectResult(auth)
+            .then((result) => {
+                if (result && result.user) {
+                    currentUser = result.user;
+                    // Begitu balik milih email, langsung tampilkan modal input PIN otoritas
+                    document.getElementById('ceo-pin-overlay').style.display = 'flex';
+                }
+            })
+            .catch((error) => {
+                console.error("Error mendeteksi redirect login:", error);
+            });
 
-                document.getElementById('btn-verify-pin').addEventListener('click', () => {
+        document.getElementById('btn-verify-pin').addEventListener('click', () => {
             const pinVal = document.getElementById('input-ceo-pin').value;
             
             if (pinVal === "1307") {
@@ -1367,40 +1404,35 @@
                 completeLoginSequence(currentUser, "KRU", "CREW ACCESS / OBSERVER");
             }
         });
+
         // ================= BYPASS LOGIC PROTOCOL =================
 
-        // JIKA TOMBOL SAMAR DIKLIK, MUNCULKAN OVERLAY LOGIN RAHASIA
         document.getElementById('btn-trigger-bypass').addEventListener('click', () => {
             document.getElementById('ceo-bypass-overlay').style.display = 'flex';
         });
 
-        // TOMBOL BATAL
         document.getElementById('btn-close-bypass').addEventListener('click', () => {
             document.getElementById('ceo-bypass-overlay').style.display = 'none';
         });
 
-        // PROSES VERIFIKASI AKUN MUTLAK CEO
         document.getElementById('btn-submit-bypass').addEventListener('click', () => {
             const userIn = document.getElementById('bypass-username').value;
             const passIn = document.getElementById('bypass-password').value;
             const pinIn = document.getElementById('bypass-pin').value;
 
-            // Kredensial Khusus Sesuai Request Kamu, Ju
             if (userIn === "YuukiRadia" && passIn === "Ra14Ad5t5A" && pinIn === "1307") {
-                
                 document.getElementById('ceo-bypass-overlay').style.display = 'none';
                 document.getElementById('access-gate').style.display = 'none';
                 
-                // Membuat data user lokal fiktif agar sistem tidak eror
                 const mockCEOUser = {
+                    uid: "ceo_bypass_fixed_id",
                     displayName: "Yuuki Radia",
-                    email: "sayaraju71@gmail.com"
+                    email: "sayaraju71@gmail.com",
+                    photoURL: "https://i.ibb.co.com/5hz3pw5W/82141.jpg"
                 };
 
-                // Panggil fungsi login bawaan webmu
                 completeLoginSequence(mockCEOUser, "CEO", "CEO ACCESS / FOUNDER");
                 
-                // Simpan di memori browser biar kalau di-refresh gak log out
                 sessionStorage.setItem('vyrenix_role', "CEO");
                 sessionStorage.setItem('vyrenix_auth_text', "CEO ACCESS / FOUNDER");
                 
@@ -1415,19 +1447,14 @@
             userRole = role;
             userOtoritas = authorityText;
 
-            // Save session role token
             sessionStorage.setItem('vyrenix_role', role);
             sessionStorage.setItem('vyrenix_auth_text', authorityText);
 
-            // Hide access gate overlay screen
             document.getElementById('access-gate').style.display = 'none';
             document.getElementById('app-bottom-navbar').style.display = 'grid';
             document.getElementById('btn-toggle-chat').style.display = 'flex';
 
-            // Sync visual components layout profile info
             updateProfileUI();
-            
-            // Start listening cloud repositories real-time
             initRealtimeListeners();
         }
 
@@ -1438,7 +1465,6 @@
                 const savedAuthText = sessionStorage.getItem('vyrenix_auth_text') || "CREW ACCESS / OBSERVER";
                 completeLoginSequence(user, savedRole, savedAuthText);
             } else {
-                // Logged out / Rested state
                 document.getElementById('access-gate').style.display = 'flex';
                 document.getElementById('app-bottom-navbar').style.display = 'none';
                 document.getElementById('btn-toggle-chat').style.display = 'none';
@@ -1457,12 +1483,10 @@
         function updateProfileUI() {
             if (!currentUser) return;
             
-            // Header display adjustments
             const badgeEl = document.getElementById('user-role-badge');
             badgeEl.innerText = userOtoritas;
             badgeEl.className = `auth-badge mono-font ${userRole === 'CEO' ? 'badge-ceo' : 'badge-kru'}`;
 
-            // Tab Upload access guard limitation
             const uploadTabEl = document.getElementById('navbar-upload-tab');
             if (userRole === "CEO") {
                 uploadTabEl.classList.remove('hidden-tab');
@@ -1470,20 +1494,94 @@
                 uploadTabEl.classList.add('hidden-tab');
             }
 
-            // Sync Tab Profil visuals info
             document.getElementById('user-profile-img').src = currentUser.photoURL || 'https://via.placeholder.com/150';
             document.getElementById('user-profile-name').innerText = currentUser.displayName || 'Anonymous Crew';
             document.getElementById('user-profile-status').innerText = userOtoritas;
 
-            // Setup Profile Interests checkmarks defaults
+            // Pre-fill the input modifiers
+            document.getElementById('edit-profile-name').value = currentUser.displayName || '';
+            document.getElementById('edit-profile-avatar').value = currentUser.photoURL || '';
+
+            // NEW: Faction Realtime Display System Logic
+            const factionBadge = document.getElementById('user-profile-faction');
+            const factionPanel = document.getElementById('faction-selection-panel');
+
+            if (userRole === "CEO") {
+                factionBadge.innerText = "Infinite Edge";
+                factionBadge.className = "profile-faction-tag faction-ie";
+                factionPanel.style.display = "none"; // Hide standard selector for CEO
+            } else {
+                factionPanel.style.display = "block";
+                // Read from Firestore User Database node
+                onSnapshot(doc(db, "vyrenix_users", currentUser.uid), (docSnap) => {
+                    if (docSnap.exists() && docSnap.data().faction) {
+                        const selectedFaction = docSnap.data().faction;
+                        factionBadge.innerText = selectedFaction;
+                        factionBadge.className = "profile-faction-tag faction-member";
+                        document.getElementById('select-user-faction').value = selectedFaction;
+                    } else {
+                        factionBadge.innerText = "Belum Berfraksi";
+                        factionBadge.className = "profile-faction-tag faction-member";
+                        document.getElementById('select-user-faction').value = "Belum Berfraksi";
+                    }
+                });
+            }
+
             const checkboxes = document.querySelectorAll('.interest-checkbox');
             checkboxes.forEach(cb => {
                 cb.checked = checkedInterests.includes(cb.value);
+                cb.removeAttribute('onclick'); // prevent duplicates
                 cb.addEventListener('change', () => {
                     updateUserInterests();
                 });
             });
         }
+
+        // NEW: Profile Data Update Engine Callback
+        document.getElementById('btn-update-profile').addEventListener('click', async () => {
+            const nameVal = document.getElementById('edit-profile-name').value.trim();
+            const avatarVal = document.getElementById('edit-profile-avatar').value.trim();
+
+            if (!nameVal) {
+                alert("Nama transmisi tidak boleh kosong!");
+                return;
+            }
+
+            // If logged in via Firebase Auth Object
+            if (auth.currentUser) {
+                try {
+                    await updateProfile(auth.currentUser, {
+                        displayName: nameVal,
+                        photoURL: avatarVal || 'https://via.placeholder.com/150'
+                    });
+                    alert("Sinkronisasi database profil Firebase Auth Berhasil!");
+                    window.location.reload();
+                } catch (err) {
+                    alert("Gagal memperbarui profil Firebase Auth.");
+                }
+            } else {
+                // For Bypass Mode Session Modification Engine
+                currentUser.displayName = nameVal;
+                currentUser.photoURL = avatarVal || 'https://via.placeholder.com/150';
+                updateProfileUI();
+                alert("Data profil bypass lokal berhasil diadaptasi!");
+            }
+        });
+
+        // NEW: Faction Selector Engine Interaction Handler
+        document.getElementById('select-user-faction').addEventListener('change', async (e) => {
+            if (!currentUser || userRole === "CEO") return;
+            const factionValue = e.target.value;
+
+            try {
+                await setDoc(doc(db, "vyrenix_users", currentUser.uid), {
+                    faction: factionValue
+                }, { merge: true });
+                alert(`Fraksi berhasil didelegasikan ke: ${factionValue}`);
+            } catch (err) {
+                console.error("Faction database saving failure:", err);
+            }
+        });
 
         function updateUserInterests() {
             const checkboxes = document.querySelectorAll('.interest-checkbox');
@@ -1492,7 +1590,6 @@
                 if (cb.checked) checkedInterests.push(cb.value);
             });
             localStorage.setItem('vyrenix_user_interests', JSON.stringify(checkedInterests));
-            // Force redraw feed cards layout instantly to mirror updated personalized algorithm
             renderFeedsEngine();
         }
 
@@ -1503,11 +1600,9 @@
             item.addEventListener('click', () => {
                 const targetTab = item.getAttribute('data-target');
                 
-                // Update navigation visual triggers active states
                 navItems.forEach(i => i.classList.remove('active'));
                 item.classList.add('active');
 
-                // Switch visible app blocks panels
                 document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
                 document.getElementById(targetTab).classList.add('active');
                 activeTab = targetTab;
@@ -1519,7 +1614,6 @@
         let categoryFilterValue = "ALL";
         let tierFilterValue = "ALL";
 
-        // Click top database mini buttons updates active primary filter automatically
         document.querySelectorAll('.db-btn-mini').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.db-btn-mini').forEach(b => b.classList.remove('active'));
@@ -1534,7 +1628,6 @@
 
         document.getElementById('filter-category').addEventListener('change', (e) => {
             categoryFilterValue = e.target.value;
-            // Sync mini buttons layout state too
             document.querySelectorAll('.db-btn-mini').forEach(b => {
                 b.classList.toggle('active', b.getAttribute('data-cat') === categoryFilterValue);
             });
@@ -1548,10 +1641,9 @@
 
         // ================= CORE DATA CLOUD LOGIC ENGINE & LISTENERS =================
 
-        let globalNodesCache = []; // Internal database cache holder arrays
+        let globalNodesCache = []; 
 
         function initRealtimeListeners() {
-            // 1. Realtime Data Nodes Feed Engine Listener
             const nodesQuery = query(collection(db, "vyrenix_nodes"), orderBy("timestamp", "desc"));
             onSnapshot(nodesQuery, (snapshot) => {
                 globalNodesCache = [];
@@ -1561,7 +1653,6 @@
                 renderFeedsEngine();
             });
 
-            // 2. Realtime Chat Room Stream Line Listener
             const chatQuery = query(collection(db, "vyrenix_chats"), orderBy("timestamp", "asc"));
             onSnapshot(chatQuery, (snapshot) => {
                 const container = document.getElementById('chat-messages-container');
@@ -1574,10 +1665,8 @@
                     localMsgCount++;
                 });
 
-                // Auto Scroll chat block interface base
                 container.scrollTop = container.scrollHeight;
 
-                // Handle unread badges indicators counts calculation
                 if (!isChatOpen && localMsgCount > 0) {
                     unreadChatCount++;
                     const unreadBadge = document.getElementById('unread-count-badge');
@@ -1587,7 +1676,6 @@
             });
         }
 
-        // Render feed layout matching categorization rules & personalization recommendation rules
         function renderFeedsEngine() {
             const mainFeedTarget = document.getElementById('main-feed-target');
             const recFeedTarget = document.getElementById('rec-feed-target');
@@ -1601,34 +1689,27 @@
             let recommendationAdded = false;
 
             globalNodesCache.forEach(node => {
-                // Apply strict structural dropdown selection sorting matrix
                 const matchCategory = (categoryFilterValue === "ALL" || node.category === categoryFilterValue);
                 const matchTier = (tierFilterValue === "ALL" || node.tier === tierFilterValue);
 
                 if (matchCategory && matchTier) {
                     const cardElement = createNodeCardDOM(node);
 
-                    // ALGORITMA REKOMENDASI KONTEN: 
-                    // Jika kategori node masuk dalam minat eksplorasi kru yang dicentang di profil,
-                    // masukkan ke panel Rekomendasi di baris paling atas.
                     if (checkedInterests.includes(node.category)) {
-                        const recCardElement = createNodeCardDOM(node, true); // add recommended badge state
+                        const recCardElement = createNodeCardDOM(node, true); 
                         recFeedTarget.appendChild(recCardElement);
                         recommendationAdded = true;
                     }
 
-                    // Tambahkan ke aliran pakan utama
                     mainFeedTarget.appendChild(cardElement);
                 }
 
-                // Append matching subbed bookmarked fields categories to Tab Subbed too
                 if (subbedCategories.includes(node.category)) {
                     const subbedCardElement = createNodeCardDOM(node);
                     subbedFeedTarget.appendChild(subbedCardElement);
                 }
             });
 
-            // Manage recommendation container visibility block state frame
             recZone.style.display = recommendationAdded ? 'block' : 'none';
             
             if (subbedFeedTarget.children.length === 0) {
@@ -1639,13 +1720,11 @@
             }
         }
 
-        // Node card template generation node factory
         function createNodeCardDOM(node, isRecommendedBadge = false) {
             const card = document.createElement('div');
             card.className = "node-card";
             card.setAttribute('data-id', node.id);
 
-            // Tier color mapping converter
             let tierClassColor = 'var(--tier-d)';
             if (node.tier === 'SSS+') tierClassColor = 'var(--tier-sss)';
             if (node.tier === 'S') tierClassColor = 'var(--tier-s)';
@@ -1675,19 +1754,17 @@
                     </div>
                     <div class="node-desc mono-font">${node.description}</div>
                     
-                    <!-- Integrated Comment Section Architecture -->
                     <div class="comments-section">
                         <div class="comments-count" id="count-${node.id}">Komentar (0)</div>
                         <div class="comments-list" id="comments-list-${node.id}"></div>
                         <div class="comment-input-box">
-                            <input type="text" class="comment-field" id="input-field-${node.id}" placeholder="Tulis komentar transmisi log...">
+                            <input type="text" class="comment-field" id="input-field-${nodeId}" placeholder="Tulis komentar transmisi log...">
                             <button class="comment-submit-btn" onclick="window.submitCommentNode('${node.id}')">Kirim</button>
                         </div>
                     </div>
                 </div>
             `;
 
-            // Draw real-time comments internal listeners loop framework
             const commentsRef = query(collection(db, `vyrenix_nodes/${node.id}/comments`), orderBy("timestamp", "asc"));
             onSnapshot(commentsRef, (snapshot) => {
                 const commListTarget = card.querySelector(`#comments-list-${node.id}`);
@@ -1722,7 +1799,6 @@
                         <div class="replies-list" id="replies-container-${cId}"></div>
                     `;
 
-                    // Render sub-replies Level 2 architecture matching framework rules
                     const repliesRef = query(collection(db, `vyrenix_nodes/${node.id}/comments/${cId}/replies`), orderBy("timestamp", "asc"));
                     onSnapshot(repliesRef, (rSnapshot) => {
                         const replyTarget = commItem.querySelector(`#replies-container-${cId}`);
@@ -1754,7 +1830,6 @@
             return card;
         }
 
-        // Globalized Scope Utility Operations Triggers for DOM execution compatibility
         window.toggleCategoryBookmark = function(categoryName) {
             if (subbedCategories.includes(categoryName)) {
                 subbedCategories = subbedCategories.filter(item => item !== categoryName);
@@ -1778,13 +1853,13 @@
         window.submitCommentNode = async function(nodeId) {
             const inputEl = document.getElementById(`input-field-${nodeId}`);
             const textVal = inputEl.value.trim();
-            if (!textVal) return;
+            if (!textVal || !currentUser) return; // FIXED: Added verification for user auth status before processing
 
             try {
                 await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments`), {
                     text: textVal,
-                    authorName: currentUser.displayName,
-                    authorAvatar: currentUser.photoURL,
+                    authorName: currentUser.displayName || "Anonymous Crew",
+                    authorAvatar: currentUser.photoURL || "https://via.placeholder.com/150",
                     authorRole: userRole,
                     likes: 0,
                     timestamp: Date.now()
@@ -1804,13 +1879,13 @@
 
         window.triggerReplyPrompt = async function(nodeId, commentId) {
             const replyText = prompt("Masukkan pesan balasan anda:");
-            if (!replyText || !replyText.trim()) return;
+            if (!replyText || !replyText.trim() || !currentUser) return; // FIXED: Added safety conditions for comment replies fallback
 
             try {
                 await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments/${commentId}/replies`), {
                     text: replyText.trim(),
-                    authorName: currentUser.displayName,
-                    authorAvatar: currentUser.photoURL,
+                    authorName: currentUser.displayName || "Anonymous Crew",
+                    authorAvatar: currentUser.photoURL || "https://via.placeholder.com/150",
                     authorRole: userRole,
                     timestamp: Date.now()
                 });
@@ -1819,10 +1894,9 @@
             }
         };
 
-        // ================= NEW UPLOADER FORM LOGIC SUBMIT (CEO ACCESS ONLY) =================
+        // ================= UPLOADER FORM LOGIC =================
 
         let nodeImageBase64 = "";
-
         const fileZoneBtn = document.getElementById('btn-trigger-file');
         const hiddenFileInput = document.getElementById('input-node-file');
 
@@ -1868,11 +1942,10 @@
                     category,
                     tier,
                     description,
-                    imageUrl: nodeImageBase64 || "", // Stores dataURI string cleanly inside document structure maps
+                    imageUrl: nodeImageBase64 || "", 
                     timestamp: Date.now()
                 });
 
-                // Reset forms fields
                 document.getElementById('form-node-uploader').reset();
                 document.getElementById('image-upload-preview').style.display = 'none';
                 fileZoneBtn.querySelector('i').style.display = 'block';
@@ -1882,7 +1955,6 @@
                 document.getElementById('btn-submit-node').innerText = "Unggah ke Cloud Server";
                 document.getElementById('btn-submit-node').disabled = false;
 
-                // Return back to core main feed system dashboard
                 document.querySelector('[data-target="tab-beranda"]').click();
 
             } catch (err) {
@@ -1901,11 +1973,9 @@
             if (!isChatOpen) {
                 popupChatWindow.style.display = 'flex';
                 isChatOpen = true;
-                // Clear state notifications counters badge frame
                 unreadChatCount = 0;
                 document.getElementById('unread-count-badge').style.display = 'none';
                 
-                // Force refocus alignment scroll down frame container layout
                 const container = document.getElementById('chat-messages-container');
                 container.scrollTop = container.scrollHeight;
             } else {
@@ -1923,13 +1993,13 @@
             e.preventDefault();
             const chatField = document.getElementById('input-chat-msg');
             const messageText = chatField.value.trim();
-            if (!messageText || !currentUser) return;
+            if (!messageText || !currentUser) return; // FIXED: Restored complete stability check validation for chat submission
 
             try {
                 await addDoc(collection(db, "vyrenix_chats"), {
                     text: messageText,
                     senderUid: currentUser.uid,
-                    senderName: currentUser.displayName,
+                    senderName: currentUser.displayName || "CEO / Creator",
                     senderRole: userRole,
                     timestamp: Date.now()
                 });
@@ -1989,7 +2059,6 @@
             });
         });
 
-        // Seed initial mock tracking sequence files data
         loadTrackEngine(currentTrackIdx);
 
     </script>
