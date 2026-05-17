@@ -1079,7 +1079,7 @@
             <div class="gate-title cyber-font">VYRENIX ACCESS GATE</div>
             <div class="gate-subtitle mono-font">CORE ARCHIVE DECRYPTION PLATFORM V12.0</div>
             
-            <form id="form-manual-auth" class="auth-form" onsubmit="return false;">
+            <form id="form-manual-auth" class="auth-form">
                 <div class="auth-input-group">
                     <label class="mono-font">Email Transmisi</label>
                     <input type="email" id="auth-email" class="auth-control" placeholder="nama@domain.com" required>
@@ -1377,10 +1377,20 @@
         let userRole = "KRU"; 
         let userOtoritas = "CREW ACCESS / OBSERVER";
         let activeTab = "tab-beranda";
-        let subbedCategories = JSON.parse(localStorage.getItem('vyrenix_subbed_cats')) || [];
-        let checkedInterests = JSON.parse(localStorage.getItem('vyrenix_user_interests')) || ["Geographical", "Astronomical"];
         let isChatOpen = false;
         let unreadChatCount = 0;
+
+        // PENCEGAHAN ERROR LOCAL STORAGE (AGAR JS TIDAK CRASH TOTAL)
+        let subbedCategories = [];
+        try { 
+            subbedCategories = JSON.parse(localStorage.getItem('vyrenix_subbed_cats')) || []; 
+        } catch(e) { console.warn("Reset subbed cats..."); }
+
+        let checkedInterests = ["Geographical", "Astronomical"];
+        try { 
+            const saved = JSON.parse(localStorage.getItem('vyrenix_user_interests'));
+            if(Array.isArray(saved)) checkedInterests = saved;
+        } catch(e) { console.warn("Reset interests..."); }
 
         const tracklist = [
             { title: "Neon Drift memory - SciFi Chill", url: "https://cdn.discordapp.com/attachments/1218962424049307750/1505278909271507104/Neon_Drift_Memory.mp3?ex=6a0a0bba&is=6a08ba3a&hm=fa54445414fc5b015336dc8b771beabe7c4db6501463543d57406f18f7c47e26&" },
@@ -1389,7 +1399,7 @@
         let currentTrackIdx = 0;
         const audioElement = document.getElementById('core-audio-engine');
 
-        // ================= NEW: EMAIL & PASSWORD AUTH LOGIC =================
+        // ================= PERBAIKAN: EMAIL & PASSWORD AUTH LOGIC =================
 
         const textAuthToggle = document.getElementById('text-auth-toggle');
         const btnAuthSubmit = document.getElementById('btn-auth-submit');
@@ -1407,7 +1417,9 @@
             }
         });
 
-        document.getElementById('form-manual-auth').addEventListener('submit', async () => {
+        // PERBAIKAN: Ditambahkan parameter event (e) dan e.preventDefault()
+        document.getElementById('form-manual-auth').addEventListener('submit', async (e) => {
+            e.preventDefault(); 
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
             const mode = textAuthToggle.getAttribute('data-mode');
@@ -1419,22 +1431,18 @@
 
             try {
                 if (mode === 'register') {
-                    // Sign Up Sequence
                     const credential = await createUserWithEmailAndPassword(auth, email, password);
                     currentUser = credential.user;
                     
-                    // Set default display name dari email prefix
                     const defaultName = email.split('@')[0];
                     await updateProfile(currentUser, { displayName: defaultName });
                     
                     btnAuthSubmit.disabled = false;
                     document.getElementById('ceo-pin-overlay').style.display = 'flex';
                 } else {
-                    // Sign In Sequence
                     const credential = await signInWithEmailAndPassword(auth, email, password);
                     currentUser = credential.user;
                     btnAuthSubmit.disabled = false;
-                    // Trigger PIN check inside Auth State Listener if role not yet determined
                 }
             } catch (err) {
                 console.error(err);
@@ -1519,7 +1527,6 @@
                 if (savedRole && savedAuthText) {
                     completeLoginSequence(user, savedRole, savedAuthText);
                 } else {
-                    // If login persistent but session clear, prompt PIN to verify CEO
                     document.getElementById('ceo-pin-overlay').style.display = 'flex';
                 }
             } else {
@@ -1727,6 +1734,7 @@
             });
         }
 
+        // PERBAIKAN: Seluruh Template Literal telah disesuaikan dengan menghapus Backslash (\)
         function renderFeedsEngine() {
             const mainFeedTarget = document.getElementById('main-feed-target');
             const recFeedTarget = document.getElementById('rec-feed-target');
@@ -1788,38 +1796,38 @@
                 <button class="delete-node-btn" style="display: ${userRole === 'CEO' ? 'flex' : 'none'};" onclick="window.deleteVyrenixNode('${node.id}')">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-                \${node.imageUrl ? `<img src="\${node.imageUrl}" class="node-img" alt="Arsip Log">` : ''}
+                ${node.imageUrl ? `<img src="${node.imageUrl}" class="node-img" alt="Arsip Log">` : ''}
                 <div class="node-body">
                     <div class="node-header-info">
                         <div>
-                            <span class="node-caption">\${node.caption}</span>
+                            <span class="node-caption">${node.caption}</span>
                             <div class="node-badges" style="margin-top:4px;">
-                                <span class="badge-tag" style="background:\${tierClassColor}">TIER \${node.tier}</span>
-                                <span class="badge-tag" style="background:var(--primary)">\${node.category}</span>
-                                \${isRecommendedBadge ? `<span class="badge-tag" style="background:#f59e0b;"><i class="fa-solid fa-bolt"></i> DIREKOMENDASIKAN</span>` : ''}
+                                <span class="badge-tag" style="background:${tierClassColor}">TIER ${node.tier}</span>
+                                <span class="badge-tag" style="background:var(--primary)">${node.category}</span>
+                                ${isRecommendedBadge ? `<span class="badge-tag" style="background:#f59e0b;"><i class="fa-solid fa-bolt"></i> DIREKOMENDASIKAN</span>` : ''}
                             </div>
                         </div>
-                        <button class="bookmark-node-btn \${isBookmarked ? 'active' : ''}" onclick="window.toggleCategoryBookmark('\${node.category}')" title="Monitor Kategori Ini">
+                        <button class="bookmark-node-btn ${isBookmarked ? 'active' : ''}" onclick="window.toggleCategoryBookmark('${node.category}')" title="Monitor Kategori Ini">
                             <i class="fa-solid fa-star"></i>
                         </button>
                     </div>
-                    <div class="node-desc mono-font">\${node.description}</div>
+                    <div class="node-desc mono-font">${node.description}</div>
                     
                     <div class="comments-section">
-                        <div class="comments-count" id="count-\${node.id}">Komentar (0)</div>
-                        <div class="comments-list" id="comments-list-\${node.id}"></div>
+                        <div class="comments-count" id="count-${node.id}">Komentar (0)</div>
+                        <div class="comments-list" id="comments-list-${node.id}"></div>
                         <div class="comment-input-box">
-                            <input type="text" class="comment-field" id="input-field-\${node.id}" placeholder="Tulis komentar transmisi log...">
-                            <button class="comment-submit-btn" onclick="window.submitCommentNode('\${node.id}')">Kirim</button>
+                            <input type="text" class="comment-field" id="input-field-${node.id}" placeholder="Tulis komentar transmisi log...">
+                            <button class="comment-submit-btn" onclick="window.submitCommentNode('${node.id}')">Kirim</button>
                         </div>
                     </div>
                 </div>
             `;
 
-            const commentsRef = query(collection(db, `vyrenix_nodes/\${node.id}/comments`), orderBy("timestamp", "asc"));
+            const commentsRef = query(collection(db, `vyrenix_nodes/${node.id}/comments`), orderBy("timestamp", "asc"));
             onSnapshot(commentsRef, (snapshot) => {
-                const commListTarget = card.querySelector(`#comments-list-\${node.id}`);
-                const commCountTarget = card.querySelector(`#count-\${node.id}`);
+                const commListTarget = card.querySelector(`#comments-list-${node.id}`);
+                const commCountTarget = card.querySelector(`#count-${node.id}`);
                 if (!commListTarget) return;
 
                 commListTarget.innerHTML = "";
@@ -1834,25 +1842,25 @@
                     commItem.className = "comment-item";
                     commItem.innerHTML = `
                         <div class="comment-meta">
-                            <img src="\${cData.authorAvatar || 'https://via.placeholder.com/50'}" class="comment-avatar">
-                            <span class="comment-author">\${cData.authorName}</span>
-                            <span class="comment-role-badge \${cData.authorRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}">\${cData.authorRole}</span>
+                            <img src="${cData.authorAvatar || 'https://via.placeholder.com/50'}" class="comment-avatar">
+                            <span class="comment-author">${cData.authorName}</span>
+                            <span class="comment-role-badge ${cData.authorRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}">${cData.authorRole}</span>
                         </div>
-                        <div class="comment-text">\${cData.text}</div>
+                        <div class="comment-text">${cData.text}</div>
                         <div class="comment-actions">
-                            <span class="comment-action-btn" onclick="window.likeCommentAction('\${node.id}', '\${cId}', \${cData.likes || 0})">
-                                <i class="fa-solid fa-thumbs-up"></i> Liked (\${cData.likes || 0})
+                            <span class="comment-action-btn" onclick="window.likeCommentAction('${node.id}', '${cId}', ${cData.likes || 0})">
+                                <i class="fa-solid fa-thumbs-up"></i> Liked (${cData.likes || 0})
                             </span>
-                            <span class="comment-action-btn" onclick="window.triggerReplyPrompt('\${node.id}', '\${cId}')">
+                            <span class="comment-action-btn" onclick="window.triggerReplyPrompt('${node.id}', '${cId}')">
                                 <i class="fa-solid fa-reply"></i> Balas
                             </span>
                         </div>
-                        <div class="replies-list" id="replies-container-\${cId}"></div>
+                        <div class="replies-list" id="replies-container-${cId}"></div>
                     `;
 
-                    const repliesRef = query(collection(db, `vyrenix_nodes/\${node.id}/comments/\${cId}/replies`), orderBy("timestamp", "asc"));
+                    const repliesRef = query(collection(db, `vyrenix_nodes/${node.id}/comments/${cId}/replies`), orderBy("timestamp", "asc"));
                     onSnapshot(repliesRef, (rSnapshot) => {
-                        const replyTarget = commItem.querySelector(`#replies-container-\${cId}`);
+                        const replyTarget = commItem.querySelector(`#replies-container-${cId}`);
                         if (!replyTarget) return;
                         replyTarget.innerHTML = "";
 
@@ -1862,11 +1870,11 @@
                             replyItem.className = "reply-item";
                             replyItem.innerHTML = `
                                 <div class="comment-meta">
-                                    <img src="\${rData.authorAvatar || 'https://via.placeholder.com/50'}" class="comment-avatar" style="width:14px; height:14px;">
-                                    <span class="comment-author" style="font-size:10px;">\${rData.authorName}</span>
-                                    <span class="comment-role-badge \${rData.authorRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}" style="font-size:7px; padding:0 2px;">\${rData.authorRole}</span>
+                                    <img src="${rData.authorAvatar || 'https://via.placeholder.com/50'}" class="comment-avatar" style="width:14px; height:14px;">
+                                    <span class="comment-author" style="font-size:10px;">${rData.authorName}</span>
+                                    <span class="comment-role-badge ${rData.authorRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}" style="font-size:7px; padding:0 2px;">${rData.authorRole}</span>
                                 </div>
-                                <div class="comment-text" style="font-size:11px; margin:0;">\${rData.text}</div>
+                                <div class="comment-text" style="font-size:11px; margin:0;">${rData.text}</div>
                             `;
                             replyTarget.appendChild(replyItem);
                         });
@@ -1875,7 +1883,7 @@
                     commListTarget.appendChild(commItem);
                 });
 
-                commCountTarget.innerText = `Komentar (\${count})`;
+                commCountTarget.innerText = `Komentar (${count})`;
             });
 
             return card;
@@ -1902,12 +1910,12 @@
         };
 
         window.submitCommentNode = async function(nodeId) {
-            const inputEl = document.getElementById(`input-field-\${nodeId}`);
+            const inputEl = document.getElementById(`input-field-${nodeId}`);
             const textVal = inputEl.value.trim();
             if (!textVal || !currentUser) return; 
 
             try {
-                await addDoc(collection(db, `vyrenix_nodes/\${nodeId}/comments`), {
+                await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments`), {
                     text: textVal,
                     authorName: currentUser.displayName || "Anonymous Crew",
                     authorAvatar: currentUser.photoURL || "https://via.placeholder.com/150",
@@ -1922,7 +1930,7 @@
         };
 
         window.likeCommentAction = async function(nodeId, commentId, currentLikes) {
-            const commentRef = doc(db, `vyrenix_nodes/\${nodeId}/comments`, commentId);
+            const commentRef = doc(db, `vyrenix_nodes/${nodeId}/comments`, commentId);
             await updateDoc(commentRef, {
                 likes: currentLikes + 1
             });
@@ -1933,7 +1941,7 @@
             if (!replyText || !replyText.trim() || !currentUser) return; 
 
             try {
-                await addDoc(collection(db, `vyrenix_nodes/\${nodeId}/comments/\${commentId}/replies`), {
+                await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments/${commentId}/replies`), {
                     text: replyText.trim(),
                     authorName: currentUser.displayName || "Anonymous Crew",
                     authorAvatar: currentUser.photoURL || "https://via.placeholder.com/150",
@@ -2065,13 +2073,13 @@
             const isSelf = chat.senderUid === currentUser?.uid;
 
             const bubble = document.createElement('div');
-            bubble.className = `chat-bubble \${isSelf ? 'self' : 'other'}`;
+            bubble.className = `chat-bubble ${isSelf ? 'self' : 'other'}`;
             bubble.innerHTML = `
                 <div class="chat-user-meta">
-                    <span>\${chat.senderName}</span>
-                    <span class="comment-role-badge \${chat.senderRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}" style="font-size:7px; padding:0 3px;">\${chat.senderRole}</span>
+                    <span>${chat.senderName}</span>
+                    <span class="comment-role-badge ${chat.senderRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}" style="font-size:7px; padding:0 3px;">${chat.senderRole}</span>
                 </div>
-                <div>\${chat.text}</div>
+                <div>${chat.text}</div>
             `;
             container.appendChild(bubble);
         }
