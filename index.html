@@ -78,7 +78,7 @@
             border-left: 1px solid var(--border);
             border-right: 1px solid var(--border);
             position: relative;
-            padding-bottom: 110px;
+            padding-bottom: 110px; /* Disesuaikan agar pas dengan panel melayang baru */
             z-index: 1;
             display: flex;
             flex-direction: column;
@@ -252,10 +252,11 @@
         header {
             padding: 16px;
             border-bottom: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             position: sticky;
             top: 0;
             z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
         .header-top {
@@ -378,12 +379,23 @@
             display: block;
         }
 
-        /* --- TAB BERANDA --- */
+        /* --- STICKY CONTROL PERBAIKAN NAVBAR KATEGORI --- */
+        .sticky-controls {
+            position: sticky;
+            top: 92px; /* Mengunci tepat di bawah header utama */
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 90;
+            padding: 12px 16px 4px 16px;
+            margin: -16px -16px 16px -16px;
+            border-bottom: 1px solid var(--border);
+        }
+
         .db-grid-mini {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 6px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .db-btn-mini {
@@ -421,7 +433,7 @@
         .filter-container {
             display: flex;
             gap: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             align-items: center;
         }
 
@@ -877,178 +889,30 @@
             margin-bottom: 10px;
         }
 
-        /* ---------------- FLOATING CHAT SYSTEM ---------------- */
-        .chat-toggle-btn {
+        /* ---------------- ALL-IN-ONE BOTTOM CONTROLLER CONTAINER (FIXED FIXED NAV) ---------------- */
+        .bottom-unified-panel {
             position: fixed;
-            bottom: 85px;
-            right: calc(50% - 280px);
-            width: 52px; height: 52px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 15px var(--primary-glow);
-            z-index: 999;
-            font-size: 20px;
-            transition: all 0.2s;
-        }
-
-        @media (max-width: 620px) {
-            .chat-toggle-btn { right: 20px; }
-        }
-
-        .chat-unread-badge {
-            position: absolute;
-            top: -2px; right: -2px;
-            background: #ef4444;
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
-            border-radius: 10px;
-            padding: 2px 6px;
-            border: 2px solid white;
-            display: none;
-        }
-
-        .chat-window {
-            position: fixed;
-            bottom: 150px;
-            right: calc(50% - 280px);
-            width: 340px;
-            height: 420px;
-            background: white;
-            border: 2px solid var(--primary);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 998;
-            animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @media (max-width: 620px) {
-            .chat-window {
-                right: 20px;
-                width: calc(100% - 40px);
-                max-width: 340px;
-            }
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .chat-header {
-            background: var(--primary);
-            color: white;
-            padding: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-title { font-size: 12px; font-weight: 800; }
-        .chat-close-btn { background: none; border: none; color: white; cursor: pointer; font-size: 16px; }
-
-        .chat-messages {
-            flex: 1;
-            padding: 12px;
-            background: #f1f5f9;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .chat-bubble {
-            max-width: 80%;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 12px;
-            line-height: 1.4;
-            position: relative;
-            word-wrap: break-word;
-        }
-
-        .chat-bubble.self {
-            background: #e6f0ff;
-            color: var(--text-main);
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-            border: 1px solid rgba(0,102,255,0.1);
-        }
-
-        .chat-bubble.other {
-            background: white;
-            color: var(--text-main);
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-            border: 1px solid var(--border);
-        }
-
-        .chat-user-meta {
-            font-size: 9px;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 2px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .chat-input-area {
-            padding: 8px;
-            background: white;
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 6px;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            outline: none;
-            font-size: 12px;
-        }
-
-        .chat-send-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* ---------------- BOTTOM NAVIGATION NAVBAR ---------------- */
-        .bottom-navbar {
-            position: fixed;
-            bottom: 16px;
+            bottom: 12px; /* Mengunci jarak mutlak dari bawah layar HP */
             left: 50%;
             transform: translateX(-50%);
-            width: calc(100% - 32px);
-            max-width: 568px;
-            height: 56px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            border-radius: 30px;
-            display: none;
+            width: calc(100% - 32px); /* Membuat lebar responsif mengikuti layar */
+            max-width: 560px; /* Batas maksimum agar tidak terlalu melebar di desktop */
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-radius: 16px; 
+            display: none; /* Dikontrol via JS saat login */
+            flex-direction: column;
+            z-index: 9999;
+            padding: 4px 8px;
+        }
+
+        /* Menu Navigasi Utama */
+        .bottom-navbar {
+            display: grid;
             grid-template-columns: repeat(5, 1fr);
-            padding: 0 10px;
-            z-index: 99999;
+            height: 54px;
         }
 
         .nav-item {
@@ -1067,6 +931,108 @@
         .nav-item i { font-size: 18px; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
         .hidden-tab { display: none !important; }
+
+        /* ---------------- FLOATING REALTIME CHAT SYSTEM (POP-UP) ---------------- */
+        .floating-chat-trigger {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 4px 12px var(--primary-glow);
+            cursor: pointer;
+            display: none; /* Dikontrol via JS saat login */
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            z-index: 9998;
+            transition: transform 0.2s;
+        }
+        .floating-chat-trigger:active {
+            transform: scale(0.9);
+        }
+
+        .chat-popup-window {
+            position: fixed;
+            bottom: 155px;
+            right: 24px;
+            width: 350px;
+            max-width: 85vw;
+            height: 420px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-popup-window.active {
+            display: flex;
+        }
+
+        .chat-popup-header {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-popup-body {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #f8fafc;
+        }
+
+        .chat-popup-footer {
+            padding: 10px;
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+
+        .mini-chat-bar {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .mini-chat-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            outline: none;
+            font-size: 12px;
+            background: #f8fafc;
+        }
+        .mini-chat-input:focus {
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .mini-chat-send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -1119,7 +1085,7 @@
 
     <div class="app-container">
         
-        <header>
+        <header id="app-main-header">
             <div class="header-top">
                 <div class="brand">
                     <div class="brand-logo"></div>
@@ -1142,42 +1108,44 @@
         </header>
 
         <main id="tab-beranda" class="tab-content active">
-            <div class="db-grid-mini mono-font">
-                <div class="db-btn-mini" data-cat="Geographical">
-                    <i class="fa-solid fa-earth-asia"></i>
-                    <span>Geography</span>
+            <div class="sticky-controls" id="app-sticky-controls">
+                <div class="db-grid-mini mono-font">
+                    <div class="db-btn-mini" data-cat="Geographical">
+                        <i class="fa-solid fa-earth-asia"></i>
+                        <span>Geography</span>
+                    </div>
+                    <div class="db-btn-mini" data-cat="Astronomical">
+                        <i class="fa-solid fa-user-astronaut"></i>
+                        <span>Astronomy</span>
+                    </div>
+                    <div class="db-btn-mini" data-cat="Technology Research">
+                        <i class="fa-solid fa-microchip"></i>
+                        <span>Research</span>
+                    </div>
+                    <div class="db-btn-mini" data-cat="Product Database">
+                        <i class="fa-solid fa-box-open"></i>
+                        <span>Products</span>
+                    </div>
                 </div>
-                <div class="db-btn-mini" data-cat="Astronomical">
-                    <i class="fa-solid fa-user-astronaut"></i>
-                    <span>Astronomy</span>
-                </div>
-                <div class="db-btn-mini" data-cat="Technology Research">
-                    <i class="fa-solid fa-microchip"></i>
-                    <span>Research</span>
-                </div>
-                <div class="db-btn-mini" data-cat="Product Database">
-                    <i class="fa-solid fa-box-open"></i>
-                    <span>Products</span>
-                </div>
-            </div>
 
-            <div class="filter-container">
-                <span class="filter-label mono-font"><i class="fa-solid fa-filter"></i> Filter:</span>
-                <select id="filter-category" class="filter-select">
-                    <option value="ALL">Semua Kategori</option>
-                    <option value="Geographical">Geographical</option>
-                    <option value="Astronomical">Astronomical</option>
-                    <option value="Technology Research">Technology Research</option>
-                    <option value="Product Database">Product Database</option>
-                </select>
-                <select id="filter-tier" class="filter-select">
-                    <option value="ALL">Semua Tier</option>
-                    <option value="SSS+">Tier SSS+</option>
-                    <option value="S">Tier S</option>
-                    <option value="A">Tier A</option>
-                    <option value="B">Tier B</option>
-                    <option value="D">Tier D</option>
-                </select>
+                <div class="filter-container">
+                    <span class="filter-label mono-font"><i class="fa-solid fa-filter"></i> Filter:</span>
+                    <select id="filter-category" class="filter-select">
+                        <option value="ALL">Semua Kategori</option>
+                        <option value="Geographical">Geographical</option>
+                        <option value="Astronomical">Astronomical</option>
+                        <option value="Technology Research">Technology Research</option>
+                        <option value="Product Database">Product Database</option>
+                    </select>
+                    <select id="filter-tier" class="filter-select">
+                        <option value="ALL">Semua Tier</option>
+                        <option value="SSS+">Tier SSS+</option>
+                        <option value="S">Tier S</option>
+                        <option value="A">Tier A</option>
+                        <option value="B">Tier B</option>
+                        <option value="D">Tier D</option>
+                    </select>
+                </div>
             </div>
 
             <div class="recommendation-zone" id="rec-zone">
@@ -1312,45 +1280,48 @@
             </div>
         </section>
 
-        <button class="chat-toggle-btn" id="btn-toggle-chat">
-            <i class="fa-solid fa-message"></i>
-            <span class="chat-unread-badge" id="unread-count-badge">0</span>
-        </button>
-
-        <div class="chat-window" id="popup-chat-window">
-            <div class="chat-header">
-                <span class="chat-title cyber-font"><i class="fa-solid fa-network-wired"></i> VYRENIX CORE CHAT</span>
-                <button class="chat-close-btn" id="btn-close-chat"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="chat-messages" id="chat-messages-container"></div>
-            <form class="chat-input-area" id="form-chat-sender" onsubmit="return false;">
-                <input type="text" class="chat-input" id="input-chat-msg" placeholder="Ketik transmisi taktis..." autocomplete="off" required>
-                <button type="submit" class="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
-            </form>
+        <div class="bottom-unified-panel" id="app-bottom-panel">
+            <nav class="bottom-navbar">
+                <div class="nav-item active" data-target="tab-beranda">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Beranda</span>
+                </div>
+                <div class="nav-item" data-target="tab-subbed">
+                    <i class="fa-solid fa-star"></i>
+                    <span>Subbed</span>
+                </div>
+                <div class="nav-item" id="navbar-upload-tab" data-target="tab-upload">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>Upload</span>
+                </div>
+                <div class="nav-item" data-target="tab-deskripsi">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Deskripsi</span>
+                </div>
+                <div class="nav-item" data-target="tab-profil">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profil</span>
+                </div>
+            </nav>
         </div>
 
-        <nav class="bottom-navbar" id="app-bottom-navbar">
-            <div class="nav-item active" data-target="tab-beranda">
-                <i class="fa-solid fa-house"></i>
-                <span>Beranda</span>
+        <button class="floating-chat-trigger" id="btn-floating-chat">
+            <i class="fa-solid fa-comments"></i>
+        </button>
+
+        <div class="chat-popup-window" id="popup-chat-window">
+            <div class="chat-popup-header">
+                <span class="cyber-font" style="font-size: 11px; font-weight: bold;"><i class="fa-solid fa-network-wired"></i> CORE TRANSMISSION CHAT</span>
+                <button id="btn-close-chat-popup" style="background:none; border:none; color:white; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="nav-item" data-target="tab-subbed">
-                <i class="fa-solid fa-star"></i>
-                <span>Subbed</span>
+            <div class="chat-popup-body" id="chat-messages-container"></div>
+            <div class="chat-popup-footer">
+                <form class="mini-chat-bar" id="form-chat-sender" onsubmit="return false;">
+                    <input type="text" class="mini-chat-input" id="input-chat-msg" placeholder="Transmisi taktis..." autocomplete="off" required>
+                    <button type="submit" class="mini-chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                </form>
             </div>
-            <div class="nav-item" id="navbar-upload-tab" data-target="tab-upload">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                <span>Upload</span>
-            </div>
-            <div class="nav-item" data-target="tab-deskripsi">
-                <i class="fa-solid fa-circle-info"></i>
-                <span>Deskripsi</span>
-            </div>
-            <div class="nav-item" data-target="tab-profil">
-                <i class="fa-solid fa-user"></i>
-                <span>Profil</span>
-            </div>
-        </nav>
+        </div>
 
     </div>
 
@@ -1377,10 +1348,7 @@
         let userRole = "KRU"; 
         let userOtoritas = "CREW ACCESS / OBSERVER";
         let activeTab = "tab-beranda";
-        let isChatOpen = false;
-        let unreadChatCount = 0;
 
-        // PENCEGAHAN ERROR LOCAL STORAGE (AGAR JS TIDAK CRASH TOTAL)
         let subbedCategories = [];
         try { 
             subbedCategories = JSON.parse(localStorage.getItem('vyrenix_subbed_cats')) || []; 
@@ -1393,13 +1361,19 @@
         } catch(e) { console.warn("Reset interests..."); }
 
         const tracklist = [
-            { title: "Neon Drift memory - SciFi Chill", url: "https://cdn.discordapp.com/attachments/1218962424049307750/1505278909271507104/Neon_Drift_Memory.mp3?ex=6a0a0bba&is=6a08ba3a&hm=fa54445414fc5b015336dc8b771beabe7c4db6501463543d57406f18f7c47e26&" },
-            { title: "Luminous fracture - Vyrenix Ambient", url: "https://cdn.discordapp.com/attachments/1218962424049307750/1505278929248845975/Luminous_Fracture_.mp3?ex=6a0a0bbf&is=6a08ba3f&hm=9246f62fe4ea40731b1d095cc6c443e2ad4d2185952e1d036c2104fcef8fcedd&" }
+            { title: "Neon Drift Memory", url: "https://www.dropbox.com/scl/fi/6odtqaogrp6hx5xasdhaq/Neon-Drift-Memory.mp3?rlkey=rzpp4vd7yrzmdb2pzipuy4gk9&st=0tr31qa6&dl=1" },
+            { title: "Luminous Fracture", url: "https://www.dropbox.com/scl/fi/mfsqw5iv1ktj2hr1trujd/_Luminous-Fracture_.mp3?rlkey=yi0em24s5flvpx6z5zaq9du3b&st=4vg6os5b&dl=1" }
         ];
         let currentTrackIdx = 0;
         const audioElement = document.getElementById('core-audio-engine');
 
-        // ================= PERBAIKAN: EMAIL & PASSWORD AUTH LOGIC =================
+        audioElement.addEventListener('error', (e) => {
+            console.error("Transmisi Audio Terputus:", e);
+            trackTitleSpan.innerText = "Error: Link Audio Expired/Bermasalah";
+            alert("Gagal memuat sistem audio. Harap perbarui URL musik di baris kode tracklist script!");
+        });
+
+        // ================= EMAIL & PASSWORD AUTH LOGIC =================
 
         const textAuthToggle = document.getElementById('text-auth-toggle');
         const btnAuthSubmit = document.getElementById('btn-auth-submit');
@@ -1438,7 +1412,6 @@
                     
                     btnAuthSubmit.disabled = false;
                     
-                    // FIXED: Hanya tanyakan PIN jika yang mendaftar adalah email CEO utama
                     if (email === "sayaraju71@gmail.com") {
                         document.getElementById('ceo-pin-overlay').style.display = 'flex';
                     } else {
@@ -1460,7 +1433,6 @@
         document.getElementById('btn-verify-pin').addEventListener('click', () => {
             const pinVal = document.getElementById('input-ceo-pin').value;
             
-            // FIXED: Double-guard PIN harus benar DAN emailnya wajib email CEO Raju
             if (pinVal === "1307" && currentUser && currentUser.email === "sayaraju71@gmail.com") {
                 document.getElementById('ceo-pin-overlay').style.display = 'none';
                 completeLoginSequence(currentUser, "CEO", "CEO ACCESS / FOUNDER");
@@ -1517,8 +1489,8 @@
             sessionStorage.setItem('vyrenix_auth_text', authorityText);
 
             document.getElementById('access-gate').style.display = 'none';
-            document.getElementById('app-bottom-navbar').style.display = 'grid';
-            document.getElementById('btn-toggle-chat').style.display = 'flex';
+            document.getElementById('app-bottom-panel').style.display = 'flex'; 
+            document.getElementById('btn-floating-chat').style.display = 'flex'; // Tampilkan tombol chat mengambang
 
             updateProfileUI();
             initRealtimeListeners();
@@ -1528,7 +1500,6 @@
             if (user) {
                 currentUser = user;
                 
-                // FIXED: Hanya email CEO Raju yang dicek status PIN-nya saat refresh halaman/login baru
                 if (user.email === "sayaraju71@gmail.com") {
                     const savedRole = sessionStorage.getItem('vyrenix_role');
                     const savedAuthText = sessionStorage.getItem('vyrenix_auth_text');
@@ -1539,13 +1510,12 @@
                         document.getElementById('ceo-pin-overlay').style.display = 'flex';
                     }
                 } else {
-                    // Akun Google/Email lain otomatis diset jadi KRU tanpa dilempar ke overlay PIN
                     completeLoginSequence(user, "KRU", "CREW ACCESS / OBSERVER");
                 }
             } else {
                 document.getElementById('access-gate').style.display = 'flex';
-                document.getElementById('app-bottom-navbar').style.display = 'none';
-                document.getElementById('btn-toggle-chat').style.display = 'none';
+                document.getElementById('app-bottom-panel').style.display = 'none';
+                document.getElementById('btn-floating-chat').style.display = 'none';
             }
         });
 
@@ -1710,6 +1680,19 @@
             renderFeedsEngine();
         });
 
+        // ================= FLOATING POPUP CHAT INTERACTION WINDOW =================
+        const floatingChatBtn = document.getElementById('btn-floating-chat');
+        const popupChatWindow = document.getElementById('popup-chat-window');
+        const closeChatPopupBtn = document.getElementById('btn-close-chat-popup');
+
+        floatingChatBtn.addEventListener('click', () => {
+            popupChatWindow.classList.toggle('active');
+        });
+
+        closeChatPopupBtn.addEventListener('click', () => {
+            popupChatWindow.classList.remove('active');
+        });
+
         // ================= CORE DATA CLOUD LOGIC ENGINE & LISTENERS =================
 
         let globalNodesCache = []; 
@@ -1729,21 +1712,12 @@
                 const container = document.getElementById('chat-messages-container');
                 container.innerHTML = "";
                 
-                let localMsgCount = 0;
                 snapshot.forEach(doc => {
                     const chatData = doc.data();
                     renderChatBubble(chatData);
-                    localMsgCount++;
                 });
 
                 container.scrollTop = container.scrollHeight;
-
-                if (!isChatOpen && localMsgCount > 0) {
-                    unreadChatCount++;
-                    const unreadBadge = document.getElementById('unread-count-badge');
-                    unreadBadge.innerText = unreadChatCount;
-                    unreadBadge.style.display = 'block';
-                }
             });
         }
 
@@ -2035,30 +2009,7 @@
             }
         });
 
-        // ================= REAL-TIME FLOATING CHAT CONTROLLERS =================
-
-        const chatToggleBtn = document.getElementById('btn-toggle-chat');
-        const popupChatWindow = document.getElementById('popup-chat-window');
-
-        chatToggleBtn.addEventListener('click', () => {
-            if (!isChatOpen) {
-                popupChatWindow.style.display = 'flex';
-                isChatOpen = true;
-                unreadChatCount = 0;
-                document.getElementById('unread-count-badge').style.display = 'none';
-                
-                const container = document.getElementById('chat-messages-container');
-                container.scrollTop = container.scrollHeight;
-            } else {
-                popupChatWindow.style.display = 'none';
-                isChatOpen = false;
-            }
-        });
-
-        document.getElementById('btn-close-chat').addEventListener('click', () => {
-            popupChatWindow.style.display = 'none';
-            isChatOpen = false;
-        });
+        // ================= REAL-TIME UNIFIED FLOATING CHAT CONTROLLERS =================
 
         document.getElementById('form-chat-sender').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -2085,15 +2036,36 @@
             const isSelf = chat.senderUid === currentUser?.uid;
 
             const bubble = document.createElement('div');
-            bubble.className = `chat-bubble ${isSelf ? 'self' : 'other'}`;
+            bubble.style.maxWidth = "85%";
+            bubble.style.padding = "8px 12px";
+            bubble.style.borderRadius = "10px";
+            bubble.style.fontSize = "12px";
+            bubble.style.lineHeight = "1.4";
+            bubble.style.wordWrap = "break-word";
+            bubble.style.display = "block";
+            bubble.style.marginBottom = "6px";
+            
+            if (isSelf) {
+                bubble.style.background = "#e6f0ff";
+                bubble.style.alignSelf = "flex-end";
+                bubble.style.border = "1px solid rgba(0,102,255,0.1)";
+                bubble.style.borderRadius = "10px 10px 2px 10px";
+            } else {
+                bubble.style.background = "#ffffff";
+                bubble.style.alignSelf = "flex-start";
+                bubble.style.border = "1px solid var(--border)";
+                bubble.style.borderRadius = "10px 10px 10px 2px";
+            }
+
             bubble.innerHTML = `
-                <div class="chat-user-meta">
+                <div class="chat-user-meta" style="font-size:9px; font-weight:bold; color:var(--primary); margin-bottom:2px; display:flex; align-items:center; gap:4px;">
                     <span>${chat.senderName}</span>
                     <span class="comment-role-badge ${chat.senderRole === 'CEO' ? 'comment-role-ceo' : 'comment-role-kru'}" style="font-size:7px; padding:0 3px;">${chat.senderRole}</span>
                 </div>
-                <div>${chat.text}</div>
+                <div style="color:var(--text-main);">${chat.text}</div>
             `;
             container.appendChild(bubble);
+            container.scrollTop = container.scrollHeight;
         }
 
         // ================= INTERNAL SHIP JUKEBOX CONTROLLERS =================
@@ -2112,7 +2084,7 @@
                     playToggleBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
                     playToggleBtn.classList.add('playing');
                 }).catch(err => {
-                    alert("Interaksi browser diblokir! Silakan klik kembali atau ganti lagu untuk memicu pemutaran manual.");
+                    alert("Interaksi browser diblokir! Silakan klik kembali untuk memicu pemutaran manual.");
                 });
             } else {
                 audioElement.pause();
