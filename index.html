@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
         :root {
@@ -29,11 +30,21 @@
             --tier-d: #64748b;
         }
 
+        /* Variabel CSS untuk Dark Mode */
+        body.dark-theme {
+            --bg: #0b0f19;
+            --card-bg: #131a26;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         body {
@@ -78,20 +89,18 @@
             border-left: 1px solid var(--border);
             border-right: 1px solid var(--border);
             position: relative;
-            padding-bottom: 110px; /* Disesuaikan agar pas dengan panel melayang baru */
+            padding-bottom: 110px;
             z-index: 1;
             display: flex;
             flex-direction: column;
         }
 
-        /* Fonts Utilities */
-        .cyber-font {
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
+        body.dark-theme .app-container {
+            background: rgba(19, 26, 38, 0.85);
         }
-        .mono-font {
-            font-family: 'Share Tech Mono', monospace;
-        }
+
+        .cyber-font { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+        .mono-font { font-family: 'Share Tech Mono', monospace; }
 
         /* ---------------- ACCESS GATE (LOGIN) ---------------- */
         #access-gate {
@@ -105,262 +114,92 @@
             padding: 20px;
             overflow-y: auto;
         }
+        body.dark-theme #access-gate { background: #0b0f19; }
 
         .gate-panel {
-            width: 100%;
-            max-width: 420px;
-            background: #ffffff;
+            width: 100%; max-width: 420px;
+            background: var(--card-bg);
             border: 2px solid var(--primary);
-            border-radius: 12px;
-            padding: 30px;
+            border-radius: 12px; padding: 30px;
             box-shadow: 0 10px 25px rgba(0, 66, 255, 0.1), inset 0 0 15px rgba(0, 102, 255, 0.05);
-            text-align: center;
-            position: relative;
+            text-align: center; position: relative;
         }
 
         .gate-logo {
-            width: 75px;
-            height: 75px;
-            margin: 0 auto 20px;
-            border-radius: 50%;
+            width: 75px; height: 75px;
+            margin: 0 auto 20px; border-radius: 50%;
             border: 2px solid var(--primary);
             background-image: url('https://i.ibb.co.com/5hz3pw5W/82141.jpg');
-            background-size: cover;
-            background-position: center;
+            background-size: cover; background-position: center;
             box-shadow: 0 0 15px var(--primary-glow);
         }
 
-        .gate-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
+        .gate-title { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+        .gate-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 25px; }
 
-        .gate-subtitle {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 25px;
-        }
-
-        /* Auth Form Elements */
-        .auth-form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            text-align: left;
-        }
-
-        .auth-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .auth-input-group label {
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
+        .auth-form { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+        .auth-input-group { display: flex; flex-direction: column; gap: 5px; }
+        .auth-input-group label { font-size: 11px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; }
+        
         .auth-control {
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-            background: #f8fafc;
+            padding: 12px; border: 1px solid var(--border); border-radius: 8px;
+            font-size: 14px; outline: none; background: var(--bg); color: var(--text-main);
             transition: border-color 0.2s;
         }
-
-        .auth-control:focus {
-            border-color: var(--primary);
-        }
-
+        .auth-control:focus { border-color: var(--primary); }
+        
         .auth-action-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px var(--primary-glow);
-            text-transform: uppercase;
-            transition: background 0.2s;
+            width: 100%; padding: 14px; background: var(--primary); color: white;
+            border: none; border-radius: 8px; font-weight: bold; font-size: 14px;
+            cursor: pointer; box-shadow: 0 4px 10px var(--primary-glow); text-transform: uppercase;
         }
 
-        .auth-action-btn:hover {
-            background: #0052cc;
-        }
+        .auth-toggle-text { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 15px; }
+        .auth-toggle-text span { color: var(--primary); font-weight: bold; cursor: pointer; }
 
-        .auth-toggle-text {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .auth-toggle-text span {
-            color: var(--primary);
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* PIN Modal Overlay */
         .pin-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            z-index: 10;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.95); border-radius: 10px;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            padding: 20px; z-index: 10;
         }
+        body.dark-theme .pin-overlay { background: rgba(19, 26, 38, 0.95); }
 
         .pin-input {
-            width: 160px;
-            padding: 10px;
-            font-size: 22px;
-            text-align: center;
-            letter-spacing: 6px;
-            border: 2px solid var(--primary);
-            background: #f8fafc;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            outline: none;
-            color: var(--primary);
+            width: 160px; padding: 10px; font-size: 22px; text-align: center;
+            letter-spacing: 6px; border: 2px solid var(--primary); background: var(--bg);
+            color: var(--text-main); border-radius: 6px; margin-bottom: 15px; outline: none;
         }
-
-        .pin-btn {
-            padding: 8px 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-        }
+        .pin-btn { padding: 8px 20px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
 
         /* ---------------- HEADER & JUKEBOX ---------------- */
         header {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.95);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
+            padding: 16px; border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.95); position: sticky; top: 0;
+            z-index: 100; backdrop-filter: blur(10px);
         }
+        body.dark-theme header { background: rgba(19, 26, 38, 0.95); }
 
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .brand { display: flex; align-items: center; gap: 8px; }
+        .brand-logo { width: 36px; height: 36px; background-image: url('https://i.ibb.co.com/5hz3pw5W/82141.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .brand-name { font-size: 18px; font-weight: 800; color: var(--primary); }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .auth-badge { font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
+        .badge-ceo { background: rgba(0, 102, 255, 0.1); color: var(--primary); border: 1px solid var(--primary); }
+        .badge-kru { background: rgba(100, 116, 139, 0.1); color: var(--text-muted); border: 1px solid var(--border); }
 
-        .brand-logo {
-            width: 36px;
-            height: 36px;
-            background-image: url('https://i.ibb.co.com/5hz3pw5W/82141.jpg');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-
-        .brand-name {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        .auth-badge {
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .badge-ceo {
-            background: rgba(0, 102, 255, 0.1);
-            color: var(--primary);
-            border: 1px solid var(--primary);
-        }
-
-        .badge-kru {
-            background: rgba(100, 116, 139, 0.1);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-        }
-
-        /* Jukebox UI */
         .jukebox {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 6px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 11px;
+            background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+            padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 11px;
         }
-
-        .track-info {
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .track-info i {
-            color: var(--accent);
-        }
-
-        .jukebox-controls {
-            display: flex;
-            gap: 8px;
-        }
-
-        .juke-btn {
-            background: none;
-            border: none;
-            color: var(--text-main);
-            cursor: pointer;
-            font-size: 13px;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-
-        .juke-btn:hover {
-            background: #e2e8f0;
-        }
-
-        .juke-btn.playing {
-            color: var(--primary);
-            animation: pulse 1.5s infinite;
-        }
+        .track-info { color: var(--text-muted); display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .track-info i { color: var(--accent); }
+        .jukebox-controls { display: flex; gap: 8px; }
+        .juke-btn { background: none; border: none; color: var(--text-main); cursor: pointer; font-size: 13px; width: 24px; height: 24px; display: flex; justify-content: center; align-items: center; border-radius: 4px; }
+        .juke-btn:hover { background: rgba(0,0,0,0.05); }
+        body.dark-theme .juke-btn:hover { background: rgba(255,255,255,0.05); }
+        .juke-btn.playing { color: var(--primary); animation: pulse 1.5s infinite; }
 
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(0, 102, 255, 0.4); }
@@ -369,670 +208,232 @@
         }
 
         /* ---------------- MAIN CONTENT APPS ---------------- */
-        .tab-content {
-            padding: 16px;
-            flex: 1;
-            display: none;
-        }
+        .tab-content { padding: 16px; flex: 1; display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        /* --- STICKY CONTROL PERBAIKAN NAVBAR KATEGORI --- */
         .sticky-controls {
-            position: sticky;
-            top: 92px; /* Mengunci tepat di bawah header utama */
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 90;
-            padding: 12px 16px 4px 16px;
-            margin: -16px -16px 16px -16px;
-            border-bottom: 1px solid var(--border);
+            position: sticky; top: 92px; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); z-index: 90; padding: 12px 16px 4px 16px;
+            margin: -16px -16px 16px -16px; border-bottom: 1px solid var(--border);
         }
+        body.dark-theme .sticky-controls { background: rgba(19, 26, 38, 0.95); }
 
-        .db-grid-mini {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            margin-bottom: 12px;
-        }
+        .db-grid-mini { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+        .db-btn-mini { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 8px 4px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .db-btn-mini i { font-size: 14px; color: var(--primary); }
+        .db-btn-mini span { font-size: 9px; font-weight: 600; text-transform: uppercase; }
+        .db-btn-mini:hover, .db-btn-mini.active { border-color: var(--primary); background: rgba(0, 102, 255, 0.03); box-shadow: 0 2px 8px rgba(0, 102, 255, 0.08); }
 
-        .db-btn-mini {
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 8px 4px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
+        .filter-container { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+        .filter-label { font-size: 11px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; }
+        .filter-select { flex: 1; padding: 6px 10px; font-size: 12px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); border-radius: 6px; outline: none; }
+
+        .recommendation-zone { background: linear-gradient(135deg, rgba(0,210,255,0.06) 0%, rgba(0,102,255,0.02) 100%); border: 1px dashed var(--accent); border-radius: 10px; padding: 12px; margin-bottom: 20px; display: none; }
+        .rec-header { font-size: 12px; font-weight: 800; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+
+        .feed-container { display: flex; flex-direction: column; gap: 16px; }
+
+        /* --- TEASER CARD (NEW) --- */
+        .node-teaser {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .db-btn-mini i {
-            font-size: 14px;
-            color: var(--primary);
-        }
-
-        .db-btn-mini span {
-            font-size: 9px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .db-btn-mini:hover, .db-btn-mini.active {
-            border-color: var(--primary);
-            background: rgba(0, 102, 255, 0.03);
-            box-shadow: 0 2px 8px rgba(0, 102, 255, 0.08);
-        }
-
-        /* Filters Bar */
-        .filter-container {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-            align-items: center;
-        }
-
-        .filter-label {
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .filter-select {
-            flex: 1;
-            padding: 6px 10px;
-            font-size: 12px;
-            border: 1px solid var(--border);
-            background: white;
-            border-radius: 6px;
-            outline: none;
-        }
-
-        /* Recommendation Section */
-        .recommendation-zone {
-            background: linear-gradient(135deg, rgba(0,210,255,0.06) 0%, rgba(0,102,255,0.02) 100%);
-            border: 1px dashed var(--accent);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .rec-header {
-            font-size: 12px;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Data Cards Layout */
-        .feed-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .node-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            height: 110px;
             position: relative;
+            transition: transform 0.2s;
         }
-
-        .node-img {
-            width: 100%;
-            height: auto;
-            max-height: 260px;
-            object-fit: cover;
-            border-bottom: 1px solid var(--border);
-            display: block;
-        }
-
-        .node-body {
-            padding: 14px;
-        }
-
-        .node-header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-        }
-
-        .node-caption {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .node-badges {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-
-        .badge-tag {
-            font-size: 9px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: white;
-        }
-
-        .node-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-            line-height: 1.5;
-            margin-bottom: 12px;
-            background: #f8fafc;
-            padding: 8px 10px;
-            border-radius: 6px;
-            border-left: 2px solid var(--border);
-        }
-
-        /* Delete Node Trigger */
-        .delete-node-btn {
-            position: absolute;
-            top: 10px; right: 10px;
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-            border: none;
-            width: 24px; height: 24px;
-            border-radius: 50%;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 5;
-            font-size: 11px;
-        }
-
-        /* Bookmark Toggle inside Node */
-        .bookmark-node-btn {
-            background: none;
-            border: none;
-            color: #cbd5e1;
-            font-size: 16px;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .bookmark-node-btn.active {
-            color: #eab308;
-        }
-
-        /* Comments Layout */
-        .comments-section {
-            border-top: 1px solid var(--border);
-            padding: 12px 14px;
-            background: #fafafa;
-        }
-
-        .comments-count {
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .comments-list {
+        .node-teaser:hover { transform: scale(1.02); border-color: var(--primary); }
+        .node-teaser-content {
+            flex: 1;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 10px;
+            justify-content: center;
         }
-
-        .comment-item {
-            font-size: 12px;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 8px 10px;
-        }
-
-        .comment-meta {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 4px;
-        }
-
-        .comment-avatar {
-            width: 18px; height: 18px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .comment-author {
+        .node-teaser-title {
+            font-size: 14px;
             font-weight: 700;
             color: var(--text-main);
-        }
-
-        .comment-role-badge {
-            font-size: 8px;
-            padding: 1px 4px;
-            border-radius: 3px;
-            font-weight: bold;
-        }
-        .comment-role-ceo { background: rgba(0,102,255,0.1); color: var(--primary); }
-        .comment-role-kru { background: rgba(0,0,0,0.05); color: var(--text-muted); }
-
-        .comment-text {
-            color: var(--text-main);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
             word-break: break-word;
         }
-
-        .comment-actions {
-            display: flex;
-            gap: 12px;
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-
-        .comment-action-btn {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-        .comment-action-btn:hover { color: var(--primary); }
-
-        /* Replies */
-        .replies-list {
-            margin-top: 6px;
-            padding-left: 12px;
-            border-left: 1px dashed var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .reply-item {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 6px 8px;
+        .node-teaser-desc {
             font-size: 11px;
+            color: var(--text-muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 6px;
         }
-
-        /* Add comment inputs */
-        .comment-input-box {
+        .node-teaser-img {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-left: 1px solid var(--border);
+            background: var(--bg);
+        }
+        .teaser-meta {
+            font-size: 9px;
             display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        /* --- FULL NODE CARD --- */
+        .node-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.02); position: relative; }
+        .node-img { width: 100%; height: auto; max-height: 350px; object-fit: contain; border-bottom: 1px solid var(--border); display: block; background: #000; }
+        .node-body { padding: 14px; position: relative; }
+        
+        .node-timestamp { position: absolute; top: 14px; right: 14px; font-size: 10px; color: var(--text-muted); font-weight: 600; }
+
+        .node-header-info { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; padding-right: 70px; }
+        .node-caption { font-size: 16px; font-weight: 700; color: var(--text-main); }
+        .node-badges { display: flex; gap: 4px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
+        .badge-tag { font-size: 9px; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; color: white; }
+
+        .node-desc { font-size: 12px; color: var(--text-main); line-height: 1.6; margin-bottom: 12px; background: var(--bg); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); }
+
+        .delete-node-btn { position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); color: white; border: none; width: 26px; height: 26px; border-radius: 50%; display: none; justify-content: center; align-items: center; cursor: pointer; z-index: 5; font-size: 12px; }
+        .bookmark-node-btn { background: none; border: none; color: #cbd5e1; font-size: 18px; cursor: pointer; position: absolute; right: 14px; top: 32px; }
+        .bookmark-node-btn.active { color: #eab308; }
+
+        /* BACK BUTTON FULL VIEW */
+        .btn-back-feed {
+            display: inline-flex;
+            align-items: center;
             gap: 6px;
-            margin-top: 8px;
-        }
-
-        .comment-field {
-            flex: 1;
-            padding: 6px 10px;
-            font-size: 12px;
+            background: var(--card-bg);
             border: 1px solid var(--border);
+            padding: 8px 12px;
             border-radius: 6px;
-            outline: none;
-        }
-
-        .comment-submit-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0 12px;
-            border-radius: 6px;
-            cursor: pointer;
+            color: var(--text-main);
             font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
+        .btn-back-feed:hover { background: var(--bg); border-color: var(--primary); color: var(--primary); }
+
+        /* Comments Layout */
+        .comments-section { border-top: 1px solid var(--border); padding: 12px 14px; background: rgba(0,0,0,0.01); }
+        .comments-count { font-size: 11px; font-weight: bold; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
+        .comments-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+        .comment-item { font-size: 12px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; }
+        .comment-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+        .comment-avatar { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; }
+        .comment-author { font-weight: 700; color: var(--text-main); }
+        .comment-role-badge { font-size: 8px; padding: 1px 4px; border-radius: 3px; font-weight: bold; }
+        .comment-role-ceo { background: rgba(0,102,255,0.1); color: var(--primary); }
+        .comment-role-kru { background: rgba(100,116,139,0.1); color: var(--text-muted); }
+        .comment-text { color: var(--text-main); margin-bottom: 4px; word-break: break-word; }
+        .comment-actions { display: flex; gap: 12px; font-size: 10px; color: var(--text-muted); }
+        
+        .comment-action-btn { cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight:600; }
+        .comment-action-btn:hover { color: var(--primary); }
+        .comment-action-btn.liked { color: var(--primary); }
+
+        .replies-list { margin-top: 6px; padding-left: 12px; border-left: 1px dashed var(--border); display: flex; flex-direction: column; gap: 6px; }
+        .reply-item { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 6px 8px; font-size: 11px; }
+        
+        .comment-input-box { display: flex; gap: 6px; margin-top: 8px; }
+        .comment-field { flex: 1; padding: 8px 10px; font-size: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); border-radius: 6px; outline: none; }
+        .comment-submit-btn { background: var(--primary); color: white; border: none; padding: 0 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight:bold; }
 
         /* --- TAB UPLOAD --- */
-        .upload-form {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .preview-zone {
-            width: 100%;
-            height: 180px;
-            border: 2px dashed var(--border);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            overflow: hidden;
-            background: #f8fafc;
-            position: relative;
-        }
-
-        .preview-zone img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group label {
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .form-control {
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 13px;
-            outline: none;
-            background: white;
-        }
-
-        .form-submit-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            box-shadow: 0 4px 10px var(--primary-glow);
-        }
+        .upload-form { display: flex; flex-direction: column; gap: 14px; }
+        .preview-zone { width: 100%; height: 180px; border: 2px dashed var(--border); border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; background: var(--bg); position: relative; }
+        .preview-zone img { width: 100%; height: 100%; object-fit: contain; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 11px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; }
+        .form-control { padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; outline: none; background: var(--card-bg); color: var(--text-main); }
+        .form-submit-btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-family: 'Orbitron', sans-serif; text-transform: uppercase; box-shadow: 0 4px 10px var(--primary-glow); }
 
         /* --- TAB PROFIL --- */
-        .profile-card {
-            text-align: center;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
-            margin-bottom: 20px;
-        }
+        .profile-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.01); margin-bottom: 20px; position: relative; }
+        .profile-avatar-wrapper { position: relative; width: 90px; height: 90px; margin: 0 auto 14px; }
+        .profile-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); }
+        .profile-name { font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; text-align: center; }
+        .profile-faction-tag { display: block; width: fit-content; margin: 0 auto 8px; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .faction-ie { background: rgba(0, 210, 255, 0.1); color: #00d2ff; border: 1px dashed var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+        .faction-member { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+        .profile-status { font-size: 11px; color: var(--primary); font-weight: bold; text-transform: uppercase; margin-bottom: 16px; text-align: center; }
+        .profile-bio-details { text-align: left; background: var(--bg); border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 12px; display: flex; flex-direction: column; gap: 6px; }
+        .bio-row { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 4px; }
+        .bio-label { font-weight: bold; color: var(--text-muted); }
+        .bio-val { color: var(--text-main); }
+        .interests-panel { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: left; margin-bottom: 20px; }
+        .interests-title { font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+        .interests-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .interest-item { display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer; }
+        .logout-btn { width: 100%; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
-        .profile-avatar-wrapper {
-            position: relative;
-            width: 90px; height: 90px;
-            margin: 0 auto 14px;
-        }
-
-        .profile-avatar {
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary);
-        }
-
-        .profile-name {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--text-main);
-            margin-bottom: 4px;
-        }
-
-        .profile-faction-tag {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 800;
-            padding: 4px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-        .faction-ie {
-            background: rgba(0, 210, 255, 0.1);
-            color: #0088cc;
-            border: 1px dashed var(--accent);
-            box-shadow: 0 0 8px var(--accent-glow);
-        }
-        .faction-member {
-            background: #f1f5f9;
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-        }
-
-        .profile-status {
-            font-size: 11px;
-            color: var(--primary);
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-        }
-
-        .profile-editor-box {
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 14px;
-            text-align: left;
-            margin-bottom: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .interests-panel {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 14px;
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .interests-title {
-            font-size: 12px;
-            font-weight: bold;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .interests-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .interest-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .logout-btn {
-            width: 100%;
-            padding: 10px;
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        /* ---------------- MEMBER CARD DIGITAL UI ---------------- */
+        .member-card-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 20000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .member-card-modal.active { display: flex; }
+        .card-popup-content { background: var(--card-bg); border-radius: 14px; padding: 20px; width: 100%; max-width: 390px; text-align: center; }
+        .vyrenix-member-card-canvas { width: 100%; height: 210px; background: linear-gradient(135deg, #090d16 0%, #152035 100%); border: 2px solid #0066ff; border-radius: 12px; position: relative; overflow: hidden; padding: 14px; color: white; text-align: left; box-shadow: 0 0 15px rgba(0, 102, 255, 0.4); }
+        .card-watermark-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; background-image: url('https://i.ibb.co.com/5hz3pw5W/82141.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.12; pointer-events: none; }
+        .card-header-title { font-size: 13px; font-weight: 800; color: #00d2ff; border-bottom: 1px solid rgba(0,210,255,0.3); padding-bottom: 4px; margin-bottom: 12px; display: flex; justify-content: space-between; }
+        .card-body-core { display: flex; gap: 12px; align-items: center; }
+        .card-avatar { width: 65px; height: 65px; border: 2px solid #0066ff; border-radius: 6px; object-fit: cover; background: #111; }
+        .card-details-text { font-size: 11px; display: flex; flex-direction: column; gap: 3px; }
+        .card-ceo-signature { position: absolute; bottom: 10px; right: 14px; text-align: right; }
+        .sig-title { font-size: 8px; color: #00d2ff; }
+        .sig-user { font-size: 11px; font-weight: bold; color: white; letter-spacing: 0.5px; margin-top: 1px; border-top: 1px dashed rgba(255,255,255,0.3); display: inline-block; }
 
         /* --- TAB DESKRIPSI --- */
-        .desc-text {
-            font-size: 13px;
-            color: var(--text-main);
-            line-height: 1.6;
-        }
-        .desc-text h3 {
-            margin: 16px 0 8px;
-            font-size: 14px;
-            color: var(--primary);
-        }
-        .desc-text p {
-            margin-bottom: 10px;
-        }
+        .desc-text { font-size: 13px; color: var(--text-main); line-height: 1.6; }
+        .desc-text h3 { margin: 16px 0 8px; font-size: 14px; color: var(--primary); }
+        .desc-text p { margin-bottom: 10px; }
 
-        /* ---------------- ALL-IN-ONE BOTTOM CONTROLLER CONTAINER (FIXED FIXED NAV) ---------------- */
+        /* ---------------- BOTTOM NAV CONTAINER ---------------- */
         .bottom-unified-panel {
-            position: fixed;
-            bottom: 12px; /* Mengunci jarak mutlak dari bawah layar HP */
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 32px); /* Membuat lebar responsif mengikuti layar */
-            max-width: 560px; /* Batas maksimum agar tidak terlalu melebar di desktop */
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            border-radius: 16px; 
-            display: none; /* Dikontrol via JS saat login */
-            flex-direction: column;
-            z-index: 9999;
-            padding: 4px 8px;
+            position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+            width: calc(100% - 32px); max-width: 560px; background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(15px); border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-radius: 16px; display: none; flex-direction: column; z-index: 9999; padding: 4px 8px;
         }
-
-        /* Menu Navigasi Utama */
-        .bottom-navbar {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            height: 54px;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: 500;
-            gap: 3px;
-            transition: all 0.2s;
-        }
-
+        body.dark-theme .bottom-unified-panel { background: rgba(19, 26, 38, 0.92); }
+        .bottom-navbar { display: grid; grid-template-columns: repeat(5, 1fr); height: 54px; }
+        .nav-item { display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-muted); cursor: pointer; font-size: 11px; font-weight: 500; gap: 3px; }
         .nav-item i { font-size: 18px; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
         .hidden-tab { display: none !important; }
 
-        /* ---------------- FLOATING REALTIME CHAT SYSTEM (POP-UP) ---------------- */
+        /* ---------------- FLOATING CHAT POP-UP ---------------- */
         .floating-chat-trigger {
-            position: fixed;
-            bottom: 90px;
-            right: 24px;
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            border: none;
-            box-shadow: 0 4px 12px var(--primary-glow);
-            cursor: pointer;
-            display: none; /* Dikontrol via JS saat login */
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            z-index: 9998;
-            transition: transform 0.2s;
+            position: fixed; bottom: 90px; right: 24px; width: 50px; height: 50px;
+            background: var(--primary); color: white; border-radius: 50%; border: none;
+            box-shadow: 0 4px 12px var(--primary-glow); cursor: pointer; display: none;
+            justify-content: center; align-items: center; font-size: 20px; z-index: 9998;
         }
-        .floating-chat-trigger:active {
-            transform: scale(0.9);
-        }
-
         .chat-popup-window {
-            position: fixed;
-            bottom: 155px;
-            right: 24px;
-            width: 350px;
-            max-width: 85vw;
-            height: 420px;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--primary);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            border-radius: 12px;
-            z-index: 10000;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
+            position: fixed; bottom: 155px; right: 24px; width: 350px; max-width: 85vw;
+            height: 420px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+            border: 1px solid var(--primary); box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-radius: 12px; z-index: 10000; display: none; flex-direction: column; overflow: hidden;
         }
-        .chat-popup-window.active {
-            display: flex;
-        }
-
-        .chat-popup-header {
-            background: var(--primary);
-            color: white;
-            padding: 10px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-popup-body {
-            flex: 1;
-            padding: 12px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            background: #f8fafc;
-        }
-
-        .chat-popup-footer {
-            padding: 10px;
-            border-top: 1px solid var(--border);
-            background: white;
-        }
-
-        .mini-chat-bar {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-
-        .mini-chat-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            outline: none;
-            font-size: 12px;
-            background: #f8fafc;
-        }
-        .mini-chat-input:focus {
-            border-color: var(--primary);
-            background: white;
-        }
-
-        .mini-chat-send-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        body.dark-theme .chat-popup-window { background: rgba(19, 26, 38, 0.98); }
+        .chat-popup-window.active { display: flex; }
+        .chat-popup-header { background: var(--primary); color: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-popup-body { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: var(--bg); scroll-behavior: smooth; }
+        .chat-popup-footer { padding: 10px; border-top: 1px solid var(--border); background: var(--card-bg); }
+        .mini-chat-bar { display: flex; gap: 6px; align-items: center; }
+        .mini-chat-input { flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 20px; outline: none; font-size: 12px; background: var(--bg); color: var(--text-main); }
+        .mini-chat-send-btn { background: var(--primary); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
@@ -1100,6 +501,7 @@
                     <span id="current-track-title" class="mono-font">Audio System Off</span>
                 </div>
                 <div class="jukebox-controls">
+                    <button class="juke-btn" id="btn-theme-toggle" title="Toggle Tema"><i class="fa-solid fa-moon"></i></button>
                     <button class="juke-btn" id="juke-play-toggle"><i class="fa-solid fa-play"></i></button>
                     <button class="juke-btn" id="juke-next-track"><i class="fa-solid fa-forward"></i></button>
                 </div>
@@ -1111,20 +513,16 @@
             <div class="sticky-controls" id="app-sticky-controls">
                 <div class="db-grid-mini mono-font">
                     <div class="db-btn-mini" data-cat="Geographical">
-                        <i class="fa-solid fa-earth-asia"></i>
-                        <span>Geography</span>
+                        <i class="fa-solid fa-earth-asia"></i><span>Geography</span>
                     </div>
                     <div class="db-btn-mini" data-cat="Astronomical">
-                        <i class="fa-solid fa-user-astronaut"></i>
-                        <span>Astronomy</span>
+                        <i class="fa-solid fa-user-astronaut"></i><span>Astronomy</span>
                     </div>
                     <div class="db-btn-mini" data-cat="Technology Research">
-                        <i class="fa-solid fa-microchip"></i>
-                        <span>Research</span>
+                        <i class="fa-solid fa-microchip"></i><span>Research</span>
                     </div>
                     <div class="db-btn-mini" data-cat="Product Database">
-                        <i class="fa-solid fa-box-open"></i>
-                        <span>Products</span>
+                        <i class="fa-solid fa-box-open"></i><span>Products</span>
                     </div>
                 </div>
 
@@ -1149,7 +547,7 @@
             </div>
 
             <div class="recommendation-zone" id="rec-zone">
-                <div class="rec-header cyber-font"><i class="fa-solid fa-bolt"></i> REKOMENDASI KONTEN UNTUK ANDA</div>
+                <div class="rec-header cyber-font"><i class="fa-solid fa-bolt"></i> REKOMENDASI UNTUK ANDA</div>
                 <div class="feed-container" id="rec-feed-target"></div>
             </div>
 
@@ -1163,14 +561,19 @@
             <div class="feed-container" id="subbed-feed-target"></div>
         </section>
 
+        <section id="tab-full-post" class="tab-content">
+            <button class="btn-back-feed" onclick="window.closeFullPost()"><i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda</button>
+            <div id="full-post-target"></div>
+        </section>
+
         <section id="tab-upload" class="tab-content">
             <div class="rec-header cyber-font" style="border:none; padding:0; margin-bottom:14px;">
-                <i class="fa-solid fa-cloud-arrow-up"></i> UNGGAN LOG ARSIP LABORATORIUM
+                <i class="fa-solid fa-cloud-arrow-up"></i> UNGGAH LOG ARSIP LABORATORIUM
             </div>
             <form class="upload-form" id="form-node-uploader" onsubmit="return false;">
                 <div class="preview-zone" id="btn-trigger-file">
                     <i class="fa-solid fa-camera" style="font-size: 24px; color: var(--text-muted); margin-bottom: 6px;"></i>
-                    <span style="font-size: 11px; color: var(--text-muted);">Pilih Gambar / Screenshoot Log</span>
+                    <span style="font-size: 11px; color: var(--text-muted);">Pilih Gambar / Animasi GIF</span>
                     <input type="file" id="input-node-file" accept="image/*" style="display: none;">
                     <img id="image-upload-preview" style="display: none;">
                 </div>
@@ -1225,23 +628,71 @@
 
         <section id="tab-profil" class="tab-content">
             <div class="profile-card">
-                <div class="profile-avatar-wrapper">
-                    <img src="" id="user-profile-img" class="profile-avatar" alt="Avatar">
-                </div>
-                <div id="user-profile-name" class="profile-name">Loading Profile...</div>
-                
-                <div id="user-profile-faction" class="profile-faction-tag faction-member">-</div>
-                
-                <div id="user-profile-status" class="profile-status mono-font">-</div>
-                
-                <div class="profile-editor-box">
-                    <div class="interests-title mono-font"><i class="fa-solid fa-user-gear"></i> Modifikasi Data Kru</div>
-                    <input type="text" id="edit-profile-name" class="form-control" placeholder="Nama Baru Transmisi..." style="padding: 6px 10px; font-size: 12px;">
-                    <input type="text" id="edit-profile-avatar" class="form-control" placeholder="URL Link Avatar Baru..." style="padding: 6px 10px; font-size: 12px;">
-                    <button class="form-submit-btn" id="btn-update-profile" style="padding: 6px; font-size: 10px;">Simpan Perubahan</button>
+                <button id="btn-toggle-profile-mode" style="position: absolute; top: 15px; right: 15px; background:none; border:none; color:var(--primary); cursor:pointer; font-size:16px;" title="Modifikasi Data"><i class="fa-solid fa-user-gear"></i></button>
+
+                <div id="profile-view-mode">
+                    <div class="profile-avatar-wrapper"><img src="" id="user-profile-img" class="profile-avatar" alt="Avatar"></div>
+                    <div id="user-profile-name" class="profile-name">Loading Profile...</div>
+                    <div id="user-profile-faction" class="profile-faction-tag faction-member">-</div>
+                    <div id="user-profile-status" class="profile-status mono-font">-</div>
+                    
+                    <div class="profile-bio-details">
+                        <div class="bio-row"><span class="bio-label">Nickname:</span><span class="bio-val" id="lbl-profile-nick">-</span></div>
+                        <div class="bio-row"><span class="bio-label">Nama Lengkap:</span><span class="bio-val" id="lbl-profile-full">-</span></div>
+                        <div class="bio-row"><span class="bio-label">Kelamin:</span><span class="bio-val" id="lbl-profile-gender">-</span></div>
+                        <div class="bio-row"><span class="bio-label">TTL:</span><span class="bio-val" id="lbl-profile-birth">-</span></div>
+                        <div class="bio-row" style="border:none; flex-direction:column; gap:4px; margin-top:4px;">
+                            <span class="bio-label">Biografi Kru:</span>
+                            <span class="bio-val" id="lbl-profile-bio" style="font-style:italic; background:rgba(0,0,0,0.02); padding:6px; border-radius:4px; display:block;">-</span>
+                        </div>
+                    </div>
+
+                    <button class="form-submit-btn" id="btn-open-member-card" style="width:100%; margin-bottom:15px; background:linear-gradient(90deg, var(--primary), var(--accent));"><i class="fa-solid fa-id-card"></i> Lihat Vyrenix Member Card</button>
                 </div>
 
-                <div class="interests-panel" id="faction-selection-panel">
+                <div id="profile-edit-mode" style="display: none;">
+                    <div class="interests-title mono-font"><i class="fa-solid fa-user-pen"></i> MODIFIKASI DEKRIPSI KRU</div>
+                    
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>Foto Profil (Galeri HP)</label>
+                        <input type="file" id="edit-profile-avatar-file" accept="image/*" class="form-control" style="font-size:11px; padding:6px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>Display Name</label>
+                        <input type="text" id="edit-profile-name" class="form-control" placeholder="Nama Transmisi Utama...">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>Nickname Game / Pendek</label>
+                        <input type="text" id="edit-profile-nick" class="form-control" placeholder="Nickname singkat...">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>Nama Lengkap</label>
+                        <input type="text" id="edit-profile-fullname" class="form-control" placeholder="Nama asli lengkap...">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>Jenis Kelamin</label>
+                        <select id="edit-profile-gender" class="form-control">
+                            <option value="Pria">Pria</option>
+                            <option value="Wanita">Wanita</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>Tempat, Tanggal Lahir</label>
+                        <input type="text" id="edit-profile-birth" class="form-control" placeholder="Jakarta, 13 Juli 2000">
+                        <label style="flex-direction:row; gap:6px; align-items:center; margin-top:4px; text-transform:none;">
+                            <input type="checkbox" id="edit-profile-privacy"> <i class="fa-solid fa-user-shield"></i> Aktifkan Sensor Mata Privacy (Sembunyikan TTL)
+                        </label>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label>Biografi Log</label>
+                        <textarea id="edit-profile-bio" class="form-control" rows="2" placeholder="Tulis bio bebas kesukaanmu..."></textarea>
+                    </div>
+
+                    <button class="form-submit-btn" id="btn-update-profile" style="width:100%; padding:10px;">Simpan Perubahan Data</button>
+                    <button class="form-submit-btn" id="btn-cancel-profile-edit" style="width:100%; padding:8px; background:rgba(0,0,0,0.2); margin-top:6px; color:var(--text-main); box-shadow:none;">Batal</button>
+                </div>
+
+                <div class="interests-panel" id="faction-selection-panel" style="margin-top:15px;">
                     <div class="interests-title mono-font"><i class="fa-solid fa-shuttle-space"></i> Registrasi Aliansi Fraksi</div>
                     <div class="form-group">
                         <select id="select-user-faction" class="form-control" style="padding: 6px 10px; font-size: 12px;">
@@ -1257,50 +708,62 @@
                 <div class="interests-panel">
                     <div class="interests-title mono-font"><i class="fa-solid fa-heart"></i> Minat Eksplorasi Kru</div>
                     <div class="interests-grid">
-                        <label class="interest-item">
-                            <input type="checkbox" class="interest-checkbox" value="Geographical" checked>
-                            Geographical
-                        </label>
-                        <label class="interest-item">
-                            <input type="checkbox" class="interest-checkbox" value="Astronomical" checked>
-                            Astronomical
-                        </label>
-                        <label class="interest-item">
-                            <input type="checkbox" class="interest-checkbox" value="Technology Research">
-                            Tech Research
-                        </label>
-                        <label class="interest-item">
-                            <input type="checkbox" class="interest-checkbox" value="Product Database">
-                            Product DB
-                        </label>
+                        <label class="interest-item"><input type="checkbox" class="interest-checkbox" value="Geographical" checked> Geographical</label>
+                        <label class="interest-item"><input type="checkbox" class="interest-checkbox" value="Astronomical" checked> Astronomical</label>
+                        <label class="interest-item"><input type="checkbox" class="interest-checkbox" value="Technology Research"> Tech Research</label>
+                        <label class="interest-item"><input type="checkbox" class="interest-checkbox" value="Product Database"> Product DB</label>
                     </div>
                 </div>
-
                 <button class="logout-btn cyber-font" id="btn-logout">LOGOUT DARI SISTEM</button>
             </div>
         </section>
 
-    </div> <div class="bottom-unified-panel" id="app-bottom-panel">
+    </div> 
+
+    <div class="member-card-modal" id="member-card-popup">
+        <div class="card-popup-content">
+            <div class="vyrenix-member-card-canvas" id="member-card-capture-target">
+                <div class="card-watermark-logo"></div>
+                <div class="card-header-title cyber-font">
+                    <span>VYRENIX MEMBER CARD</span>
+                    <span id="card-render-uid" style="font-size:8px; color:rgba(255,255,255,0.4);">ID: CORE</span>
+                </div>
+                <div class="card-body-core">
+                    <img src="" id="card-render-avatar" class="card-avatar">
+                    <div class="card-details-text">
+                        <div><strong style="color:#00d2ff;">NAME:</strong> <span id="card-render-name">-</span></div>
+                        <div><strong style="color:#00d2ff;">FACTION:</strong> <span id="card-render-faction">-</span></div>
+                        <div><strong style="color:#00d2ff;">STATUS:</strong> <span id="card-render-status">-</span></div>
+                        <div><strong style="color:#00d2ff;">RANK LEVEL:</strong> <span id="card-render-level">CREW MEMBER</span></div>
+                    </div>
+                </div>
+                <div class="card-ceo-signature cyber-font">
+                    <div class="sig-title">Accepted by Vyrenix CEO: YuukiRadia</div>
+                    <div class="sig-user" id="card-render-sig-nick">UserNick</div>
+                </div>
+            </div>
+            
+            <button class="form-submit-btn" id="btn-download-member-card" style="width:100%; padding:10px;"><i class="fa-solid fa-download"></i> Download Kartu (.PNG)</button>
+            <button class="form-submit-btn" id="btn-close-member-card" style="width:100%; padding:8px; background:rgba(0,0,0,0.1); margin-top:6px; color:var(--text-main); box-shadow:none;">Tutup</button>
+        </div>
+    </div>
+
+    <div class="bottom-unified-panel" id="app-bottom-panel">
         <nav class="bottom-navbar">
             <div class="nav-item active" data-target="tab-beranda">
-                <i class="fa-solid fa-house"></i>
-                <span>Beranda</span>
+                <i class="fa-solid fa-house"></i><span>Beranda</span>
             </div>
             <div class="nav-item" data-target="tab-subbed">
-                <i class="fa-solid fa-star"></i>
-                <span>Subbed</span>
+                <i class="fa-solid fa-star"></i><span>Subbed</span>
             </div>
             <div class="nav-item" id="navbar-upload-tab" data-target="tab-upload">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                <span>Upload</span>
+                <i class="fa-solid fa-cloud-arrow-up"></i><span>Upload</span>
             </div>
             <div class="nav-item" data-target="tab-deskripsi">
-                <i class="fa-solid fa-circle-info"></i>
-                <span>Deskripsi</span>
+                <i class="fa-solid fa-circle-info"></i><span>Deskripsi</span>
             </div>
             <div class="nav-item" data-target="tab-profil">
-                <i class="fa-solid fa-user"></i>
-                <span>Profil</span>
+                <i class="fa-solid fa-user"></i><span>Profil</span>
             </div>
         </nav>
     </div>
@@ -1326,7 +789,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, updateDoc, deleteDoc, getDoc, arrayUnion, arrayRemove, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDi6at8nAzVEabWeMLyjiv7t-V36lBFtQs",
@@ -1346,17 +809,33 @@
         let userRole = "KRU"; 
         let userOtoritas = "CREW ACCESS / OBSERVER";
         let activeTab = "tab-beranda";
+        let previousTab = "tab-beranda"; // Untuk sistem Back Feed
+        let localAvatarBase64 = "";
 
         let subbedCategories = [];
-        try { 
-            subbedCategories = JSON.parse(localStorage.getItem('vyrenix_subbed_cats')) || []; 
-        } catch(e) { console.warn("Reset subbed cats..."); }
+        try { subbedCategories = JSON.parse(localStorage.getItem('vyrenix_subbed_cats')) || []; } catch(e) {}
 
         let checkedInterests = ["Geographical", "Astronomical"];
         try { 
             const saved = JSON.parse(localStorage.getItem('vyrenix_user_interests'));
             if(Array.isArray(saved)) checkedInterests = saved;
-        } catch(e) { console.warn("Reset interests..."); }
+        } catch(e) {}
+
+        const btnThemeToggle = document.getElementById('btn-theme-toggle');
+        if (localStorage.getItem('vyrenix_theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            btnThemeToggle.innerHTML = `<i class="fa-solid fa-sun"></i>`;
+        }
+        btnThemeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('vyrenix_theme', 'dark');
+                btnThemeToggle.innerHTML = `<i class="fa-solid fa-sun"></i>`;
+            } else {
+                localStorage.setItem('vyrenix_theme', 'light');
+                btnThemeToggle.innerHTML = `<i class="fa-solid fa-moon"></i>`;
+            }
+        });
 
         const tracklist = [
             { title: "Neon Drift Memory", url: "https://www.dropbox.com/scl/fi/6odtqaogrp6hx5xasdhaq/Neon-Drift-Memory.mp3?rlkey=rzpp4vd7yrzmdb2pzipuy4gk9&st=0tr31qa6&dl=1" },
@@ -1365,17 +844,9 @@
         let currentTrackIdx = 0;
         const audioElement = document.getElementById('core-audio-engine');
 
-        audioElement.addEventListener('error', (e) => {
-            console.error("Transmisi Audio Terputus:", e);
-            trackTitleSpan.innerText = "Error: Link Audio Expired/Bermasalah";
-            alert("Gagal memuat sistem audio. Harap perbarui URL musik di baris kode tracklist script!");
-        });
-
-        // ================= EMAIL & PASSWORD AUTH LOGIC =================
-
+        // ==== AUTH & BYPASS (Sama seperti sebelumnya) ====
         const textAuthToggle = document.getElementById('text-auth-toggle');
         const btnAuthSubmit = document.getElementById('btn-auth-submit');
-
         textAuthToggle.addEventListener('click', () => {
             const currentMode = textAuthToggle.getAttribute('data-mode');
             if (currentMode === 'login') {
@@ -1394,9 +865,7 @@
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
             const mode = textAuthToggle.getAttribute('data-mode');
-
             if (!email || !password) return;
-
             btnAuthSubmit.disabled = true;
             btnAuthSubmit.innerText = "Processing Transmisi...";
 
@@ -1404,24 +873,17 @@
                 if (mode === 'register') {
                     const credential = await createUserWithEmailAndPassword(auth, email, password);
                     currentUser = credential.user;
-                    
                     const defaultName = email.split('@')[0];
                     await updateProfile(currentUser, { displayName: defaultName });
-                    
                     btnAuthSubmit.disabled = false;
-                    
-                    if (email === "sayaraju71@gmail.com") {
-                        document.getElementById('ceo-pin-overlay').style.display = 'flex';
-                    } else {
-                        completeLoginSequence(currentUser, "KRU", "CREW ACCESS / OBSERVER");
-                    }
+                    if (email === "sayaraju71@gmail.com") { document.getElementById('ceo-pin-overlay').style.display = 'flex'; } 
+                    else { completeLoginSequence(currentUser, "KRU", "CREW ACCESS / OBSERVER"); }
                 } else {
                     const credential = await signInWithEmailAndPassword(auth, email, password);
                     currentUser = credential.user;
                     btnAuthSubmit.disabled = false;
                 }
             } catch (err) {
-                console.error(err);
                 alert("Akses Gagal: " + err.message);
                 btnAuthSubmit.disabled = false;
                 btnAuthSubmit.innerText = mode === 'login' ? "Masuk Sistem" : "Daftar Kru Baru";
@@ -1430,7 +892,6 @@
 
         document.getElementById('btn-verify-pin').addEventListener('click', () => {
             const pinVal = document.getElementById('input-ceo-pin').value;
-            
             if (pinVal === "1307" && currentUser && currentUser.email === "sayaraju71@gmail.com") {
                 document.getElementById('ceo-pin-overlay').style.display = 'none';
                 completeLoginSequence(currentUser, "CEO", "CEO ACCESS / FOUNDER");
@@ -1441,75 +902,40 @@
             }
         });
 
-        // ================= BYPASS LOGIC PROTOCOL =================
-
-        document.getElementById('btn-trigger-bypass').addEventListener('click', () => {
-            document.getElementById('ceo-bypass-overlay').style.display = 'flex';
-        });
-
-        document.getElementById('btn-close-bypass').addEventListener('click', () => {
-            document.getElementById('ceo-bypass-overlay').style.display = 'none';
-        });
-
+        document.getElementById('btn-trigger-bypass').addEventListener('click', () => { document.getElementById('ceo-bypass-overlay').style.display = 'flex'; });
+        document.getElementById('btn-close-bypass').addEventListener('click', () => { document.getElementById('ceo-bypass-overlay').style.display = 'none'; });
         document.getElementById('btn-submit-bypass').addEventListener('click', () => {
             const userIn = document.getElementById('bypass-username').value;
             const passIn = document.getElementById('bypass-password').value;
             const pinIn = document.getElementById('bypass-pin').value;
-
             if (userIn === "YuukiRadia" && passIn === "Ra14Ad5t5A" && pinIn === "1307") {
                 document.getElementById('ceo-bypass-overlay').style.display = 'none';
                 document.getElementById('access-gate').style.display = 'none';
-                
-                const mockCEOUser = {
-                    uid: "ceo_bypass_fixed_id",
-                    displayName: "Yuuki Radia",
-                    email: "sayaraju71@gmail.com",
-                    photoURL: "https://i.ibb.co.com/5hz3pw5W/82141.jpg"
-                };
-
+                const mockCEOUser = { uid: "ceo_bypass_fixed_id", displayName: "Yuuki Radia", email: "sayaraju71@gmail.com", photoURL: "https://i.ibb.co.com/5hz3pw5W/82141.jpg" };
                 completeLoginSequence(mockCEOUser, "CEO", "CEO ACCESS / FOUNDER");
-                
-                sessionStorage.setItem('vyrenix_role', "CEO");
-                sessionStorage.setItem('vyrenix_auth_text', "CEO ACCESS / FOUNDER");
-                
                 alert("Otorisasi Berhasil. Selamat Datang Kembali, CEO!");
-            } else {
-                alert("Akses Ditolak! Kredensial Otoritas Tidak Valid.");
-            }
+            } else { alert("Akses Ditolak! Kredensial Otoritas Tidak Valid."); }
         });
 
         function completeLoginSequence(user, role, authorityText) {
-            currentUser = user;
-            userRole = role;
-            userOtoritas = authorityText;
-
+            currentUser = user; userRole = role; userOtoritas = authorityText;
             sessionStorage.setItem('vyrenix_role', role);
             sessionStorage.setItem('vyrenix_auth_text', authorityText);
-
             document.getElementById('access-gate').style.display = 'none';
             document.getElementById('app-bottom-panel').style.display = 'flex'; 
-            document.getElementById('btn-floating-chat').style.display = 'flex'; // Tampilkan tombol chat mengambang
-
-            updateProfileUI();
-            initRealtimeListeners();
+            document.getElementById('btn-floating-chat').style.display = 'flex';
+            updateProfileUI(); initRealtimeListeners();
         }
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
-                
                 if (user.email === "sayaraju71@gmail.com") {
                     const savedRole = sessionStorage.getItem('vyrenix_role');
                     const savedAuthText = sessionStorage.getItem('vyrenix_auth_text');
-                    
-                    if (savedRole === "CEO" && savedAuthText) {
-                        completeLoginSequence(user, savedRole, savedAuthText);
-                    } else {
-                        document.getElementById('ceo-pin-overlay').style.display = 'flex';
-                    }
-                } else {
-                    completeLoginSequence(user, "KRU", "CREW ACCESS / OBSERVER");
-                }
+                    if (savedRole === "CEO" && savedAuthText) completeLoginSequence(user, savedRole, savedAuthText);
+                    else document.getElementById('ceo-pin-overlay').style.display = 'flex';
+                } else { completeLoginSequence(user, "KRU", "CREW ACCESS / OBSERVER"); }
             } else {
                 document.getElementById('access-gate').style.display = 'flex';
                 document.getElementById('app-bottom-panel').style.display = 'none';
@@ -1517,191 +943,173 @@
             }
         });
 
-        document.getElementById('btn-logout').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                sessionStorage.clear();
-                window.location.reload();
-            });
-        });
+        document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth).then(() => { sessionStorage.clear(); window.location.reload(); }); });
 
-        // ================= RENDERING MANAGEMENT & PROFILE SYNC =================
+        // ==== PROFIL (Sisanya tetap sama) ====
+        const btnToggleProfileMode = document.getElementById('btn-toggle-profile-mode');
+        const viewProfileContainer = document.getElementById('profile-view-mode');
+        const editProfileContainer = document.getElementById('profile-edit-mode');
+        btnToggleProfileMode.addEventListener('click', () => {
+            if (viewProfileContainer.style.display === 'none') { viewProfileContainer.style.display = 'block'; editProfileContainer.style.display = 'none'; } 
+            else { viewProfileContainer.style.display = 'none'; editProfileContainer.style.display = 'block'; }
+        });
+        document.getElementById('btn-cancel-profile-edit').addEventListener('click', () => { viewProfileContainer.style.display = 'block'; editProfileContainer.style.display = 'none'; });
+
+        document.getElementById('edit-profile-avatar-file').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) { localAvatarBase64 = evt.target.result; };
+            reader.readAsDataURL(file);
+        });
 
         function updateProfileUI() {
             if (!currentUser) return;
-            
             const badgeEl = document.getElementById('user-role-badge');
-            badgeEl.innerText = userOtoritas;
-            badgeEl.className = `auth-badge mono-font ${userRole === 'CEO' ? 'badge-ceo' : 'badge-kru'}`;
-
+            badgeEl.innerText = userOtoritas; badgeEl.className = `auth-badge mono-font ${userRole === 'CEO' ? 'badge-ceo' : 'badge-kru'}`;
             const uploadTabEl = document.getElementById('navbar-upload-tab');
-            if (userRole === "CEO") {
-                uploadTabEl.classList.remove('hidden-tab');
-            } else {
-                uploadTabEl.classList.add('hidden-tab');
-            }
+            if (userRole === "CEO") uploadTabEl.classList.remove('hidden-tab'); else uploadTabEl.classList.add('hidden-tab');
 
-            document.getElementById('user-profile-img').src = currentUser.photoURL || 'https://via.placeholder.com/150';
-            document.getElementById('user-profile-name').innerText = currentUser.displayName || 'Anonymous Crew';
-            document.getElementById('user-profile-status').innerText = userOtoritas;
+            onSnapshot(doc(db, "vyrenix_users", currentUser.uid), (docSnap) => {
+                let dbData = docSnap.exists() ? docSnap.data() : {};
+                const finalAvatar = dbData.avatarBase64 || currentUser.photoURL || 'https://via.placeholder.com/150';
+                const finalDisplayName = dbData.displayName || currentUser.displayName || 'Anonymous Crew';
+                const finalNickname = dbData.nickname || dbData.displayName || currentUser.displayName || 'UserNick';
+                const finalFullname = dbData.fullname || '-';
+                const finalGender = dbData.gender || '-';
+                const finalBio = dbData.bio || 'Tidak ada biografi log data tertulis.';
+                let finalBirth = dbData.birth || '-';
+                if (dbData.hideBirth && userRole !== "CEO" && currentUser.uid !== docSnap.id) finalBirth = "[🔒 ENCRYPTED DATA]";
 
-            document.getElementById('edit-profile-name').value = currentUser.displayName || '';
-            document.getElementById('edit-profile-avatar').value = currentUser.photoURL || '';
+                document.getElementById('user-profile-img').src = finalAvatar;
+                document.getElementById('user-profile-name').innerText = finalDisplayName;
+                document.getElementById('user-profile-status').innerText = userOtoritas;
+                document.getElementById('lbl-profile-nick').innerText = finalNickname;
+                document.getElementById('lbl-profile-full').innerText = finalFullname;
+                document.getElementById('lbl-profile-gender').innerText = finalGender;
+                document.getElementById('lbl-profile-birth').innerText = finalBirth;
+                document.getElementById('lbl-profile-bio').innerText = finalBio;
+
+                document.getElementById('edit-profile-name').value = finalDisplayName;
+                document.getElementById('edit-profile-nick').value = finalNickname;
+                document.getElementById('edit-profile-fullname').value = finalFullname;
+                document.getElementById('edit-profile-gender').value = dbData.gender || 'Pria';
+                document.getElementById('edit-profile-birth').value = dbData.birth || '';
+                document.getElementById('edit-profile-privacy').checked = !!dbData.hideBirth;
+                document.getElementById('edit-profile-bio').value = dbData.bio || '';
+
+                document.getElementById('card-render-uid').innerText = `ID: ${currentUser.uid.substring(0, 8).toUpperCase()}`;
+                document.getElementById('card-render-avatar').src = finalAvatar;
+                document.getElementById('card-render-name').innerText = finalFullname !== '-' ? finalFullname.toUpperCase() : finalDisplayName.toUpperCase();
+                document.getElementById('card-render-status').innerText = userRole === 'CEO' ? 'FOUNDER & CEO' : 'CREW OBSERVER';
+                document.getElementById('card-render-level').innerText = userRole === 'CEO' ? 'TIER SSS+' : 'TIER B';
+                document.getElementById('card-render-sig-nick').innerText = finalNickname;
+            });
 
             const factionBadge = document.getElementById('user-profile-faction');
             const factionPanel = document.getElementById('faction-selection-panel');
-
             if (userRole === "CEO") {
-                factionBadge.innerText = "Infinite Edge";
-                factionBadge.className = "profile-faction-tag faction-ie";
-                factionPanel.style.display = "none";
+                factionBadge.innerText = "Infinite Edge"; factionBadge.className = "profile-faction-tag faction-ie";
+                factionPanel.style.display = "none"; document.getElementById('card-render-faction').innerText = "INFINITE EDGE";
             } else {
                 factionPanel.style.display = "block";
                 onSnapshot(doc(db, "vyrenix_users", currentUser.uid), (docSnap) => {
                     if (docSnap.exists() && docSnap.data().faction) {
                         const selectedFaction = docSnap.data().faction;
-                        factionBadge.innerText = selectedFaction;
-                        factionBadge.className = "profile-faction-tag faction-member";
+                        factionBadge.innerText = selectedFaction; factionBadge.className = "profile-faction-tag faction-member";
                         document.getElementById('select-user-faction').value = selectedFaction;
+                        document.getElementById('card-render-faction').innerText = selectedFaction.toUpperCase();
                     } else {
-                        factionBadge.innerText = "Belum Berfraksi";
-                        factionBadge.className = "profile-faction-tag faction-member";
-                        document.getElementById('select-user-faction').value = "Belum Berfraksi";
+                        factionBadge.innerText = "Belum Berfraksi"; factionBadge.className = "profile-faction-tag faction-member";
+                        document.getElementById('select-user-faction').value = "Belum Berfraksi"; document.getElementById('card-render-faction').innerText = "OBSERVER";
                     }
                 });
             }
 
             const checkboxes = document.querySelectorAll('.interest-checkbox');
-            checkboxes.forEach(cb => {
-                cb.checked = checkedInterests.includes(cb.value);
-                cb.removeAttribute('onclick');
-                cb.addEventListener('change', () => {
-                    updateUserInterests();
-                });
-            });
+            checkboxes.forEach(cb => { cb.checked = checkedInterests.includes(cb.value); cb.removeAttribute('onclick'); cb.addEventListener('change', () => { updateUserInterests(); }); });
         }
 
         document.getElementById('btn-update-profile').addEventListener('click', async () => {
             const nameVal = document.getElementById('edit-profile-name').value.trim();
-            const avatarVal = document.getElementById('edit-profile-avatar').value.trim();
-
-            if (!nameVal) {
-                alert("Nama transmisi tidak boleh kosong!");
-                return;
-            }
-
-            if (auth.currentUser) {
-                try {
-                    await updateProfile(auth.currentUser, {
-                        displayName: nameVal,
-                        photoURL: avatarVal || 'https://via.placeholder.com/150'
-                    });
-                    alert("Sinkronisasi database profil Firebase Auth Berhasil!");
-                    window.location.reload();
-                } catch (err) {
-                    alert("Gagal memperbarui profil Firebase Auth.");
-                }
-            } else {
-                currentUser.displayName = nameVal;
-                currentUser.photoURL = avatarVal || 'https://via.placeholder.com/150';
-                updateProfileUI();
-                alert("Data profil bypass lokal berhasil diadaptasi!");
-            }
-        });
-
-        document.getElementById('select-user-faction').addEventListener('change', async (e) => {
-            if (!currentUser || userRole === "CEO") return;
-            const factionValue = e.target.value;
-
+            const nickVal = document.getElementById('edit-profile-nick').value.trim();
+            const fullVal = document.getElementById('edit-profile-fullname').value.trim();
+            const genderVal = document.getElementById('edit-profile-gender').value;
+            const birthVal = document.getElementById('edit-profile-birth').value.trim();
+            const privacyVal = document.getElementById('edit-profile-privacy').checked;
+            const bioVal = document.getElementById('edit-profile-bio').value.trim();
+            if (!nameVal) { alert("Nama transmisi tidak boleh kosong!"); return; }
+            document.getElementById('btn-update-profile').innerText = "Syncing Storage Matrix...";
             try {
-                await setDoc(doc(db, "vyrenix_users", currentUser.uid), {
-                    faction: factionValue
-                }, { merge: true });
-                alert(`Fraksi berhasil didelegasikan ke: ${factionValue}`);
-            } catch (err) {
-                console.error("Faction database saving failure:", err);
-            }
+                await setDoc(doc(db, "vyrenix_users", currentUser.uid), { displayName: nameVal, nickname: nickVal || nameVal, fullname: fullVal, gender: genderVal, birth: birthVal, hideBirth: privacyVal, bio: bioVal, avatarBase64: localAvatarBase64 || currentUser.photoURL || "" }, { merge: true });
+                if (auth.currentUser && !currentUser.uid.includes("bypass")) { await updateProfile(auth.currentUser, { displayName: nameVal, photoURL: localAvatarBase64 || currentUser.photoURL || "" }); }
+                alert("Sinkronisasi database profil Vyrenix Berhasil!");
+                document.getElementById('btn-update-profile').innerText = "Simpan Perubahan Data";
+                viewProfileContainer.style.display = 'block'; editProfileContainer.style.display = 'none';
+            } catch (err) { alert("Gagal memperbarui profil: " + err.message); document.getElementById('btn-update-profile').innerText = "Simpan Perubahan Data"; }
         });
 
-        function updateUserInterests() {
-            const checkboxes = document.querySelectorAll('.interest-checkbox');
-            checkedInterests = [];
-            checkboxes.forEach(cb => {
-                if (cb.checked) checkedInterests.push(cb.value);
-            });
-            localStorage.setItem('vyrenix_user_interests', JSON.stringify(checkedInterests));
-            renderFeedsEngine();
-        }
-
-        // ================= BOTTOM NAVIGATION BAR SYSTEMS =================
-
+        // ==== NAVIGATION & BOTTOM BAR ====
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => {
             item.addEventListener('click', () => {
                 const targetTab = item.getAttribute('data-target');
-                
                 navItems.forEach(i => i.classList.remove('active'));
                 item.classList.add('active');
-
                 document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
                 document.getElementById(targetTab).classList.add('active');
                 activeTab = targetTab;
             });
         });
 
-        // ================= MINI 4-DB TOP BUTTONS + FILTER IMPLEMENTATIONS =================
-
         let categoryFilterValue = "ALL";
         let tierFilterValue = "ALL";
-
         document.querySelectorAll('.db-btn-mini').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.db-btn-mini').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-
                 const selectedCategory = btn.getAttribute('data-cat');
-                categoryFilterValue = selectedCategory;
-                document.getElementById('filter-category').value = selectedCategory;
+                categoryFilterValue = selectedCategory; document.getElementById('filter-category').value = selectedCategory;
                 renderFeedsEngine();
             });
         });
-
         document.getElementById('filter-category').addEventListener('change', (e) => {
             categoryFilterValue = e.target.value;
-            document.querySelectorAll('.db-btn-mini').forEach(b => {
-                b.classList.toggle('active', b.getAttribute('data-cat') === categoryFilterValue);
-            });
+            document.querySelectorAll('.db-btn-mini').forEach(b => { b.classList.toggle('active', b.getAttribute('data-cat') === categoryFilterValue); });
             renderFeedsEngine();
         });
+        document.getElementById('filter-tier').addEventListener('change', (e) => { tierFilterValue = e.target.value; renderFeedsEngine(); });
 
-        document.getElementById('filter-tier').addEventListener('change', (e) => {
-            tierFilterValue = e.target.value;
-            renderFeedsEngine();
-        });
-
-        // ================= FLOATING POPUP CHAT INTERACTION WINDOW =================
+        // ==== FLOATING CHAT (Auto-scroll ditambahkan!) ====
         const floatingChatBtn = document.getElementById('btn-floating-chat');
         const popupChatWindow = document.getElementById('popup-chat-window');
         const closeChatPopupBtn = document.getElementById('btn-close-chat-popup');
 
         floatingChatBtn.addEventListener('click', () => {
             popupChatWindow.classList.toggle('active');
+            // FITUR BARU: Otomatis scroll ke pesan terbaru pas dibuka!
+            if (popupChatWindow.classList.contains('active')) {
+                const container = document.getElementById('chat-messages-container');
+                setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
+            }
         });
+        closeChatPopupBtn.addEventListener('click', () => { popupChatWindow.classList.remove('active'); });
 
-        closeChatPopupBtn.addEventListener('click', () => {
-            popupChatWindow.classList.remove('active');
-        });
-
-        // ================= CORE DATA CLOUD LOGIC ENGINE & LISTENERS =================
-
+        // ==== DATA LOGIC ENGINE & RENDERING ====
         let globalNodesCache = []; 
+
+        // Fungsi Format Tanggal untuk Timestamp Postingan
+        function formatTimestamp(ts) {
+            if(!ts) return "";
+            const d = new Date(ts);
+            return `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+        }
 
         function initRealtimeListeners() {
             const nodesQuery = query(collection(db, "vyrenix_nodes"), orderBy("timestamp", "desc"));
             onSnapshot(nodesQuery, (snapshot) => {
                 globalNodesCache = [];
-                snapshot.forEach(doc => {
-                    globalNodesCache.push({ id: doc.id, ...doc.data() });
-                });
+                snapshot.forEach(doc => { globalNodesCache.push({ id: doc.id, ...doc.data() }); });
                 renderFeedsEngine();
             });
 
@@ -1709,12 +1117,7 @@
             onSnapshot(chatQuery, (snapshot) => {
                 const container = document.getElementById('chat-messages-container');
                 container.innerHTML = "";
-                
-                snapshot.forEach(doc => {
-                    const chatData = doc.data();
-                    renderChatBubble(chatData);
-                });
-
+                snapshot.forEach(doc => { renderChatBubble(doc.data()); });
                 container.scrollTop = container.scrollHeight;
             });
         }
@@ -1725,10 +1128,7 @@
             const recZone = document.getElementById('rec-zone');
             const subbedFeedTarget = document.getElementById('subbed-feed-target');
 
-            mainFeedTarget.innerHTML = "";
-            recFeedTarget.innerHTML = "";
-            subbedFeedTarget.innerHTML = "";
-
+            mainFeedTarget.innerHTML = ""; recFeedTarget.innerHTML = ""; subbedFeedTarget.innerHTML = "";
             let recommendationAdded = false;
 
             globalNodesCache.forEach(node => {
@@ -1736,34 +1136,82 @@
                 const matchTier = (tierFilterValue === "ALL" || node.tier === tierFilterValue);
 
                 if (matchCategory && matchTier) {
-                    const cardElement = createNodeCardDOM(node);
-
+                    // Gunakan Teaser Card untuk Beranda!
+                    mainFeedTarget.appendChild(createTeaserCardDOM(node));
+                    
                     if (checkedInterests.includes(node.category)) {
-                        const recCardElement = createNodeCardDOM(node, true); 
-                        recFeedTarget.appendChild(recCardElement);
+                        recFeedTarget.appendChild(createTeaserCardDOM(node, true));
                         recommendationAdded = true;
                     }
-
-                    mainFeedTarget.appendChild(cardElement);
                 }
-
                 if (subbedCategories.includes(node.category)) {
-                    const subbedCardElement = createNodeCardDOM(node);
-                    subbedFeedTarget.appendChild(subbedCardElement);
+                    subbedFeedTarget.appendChild(createTeaserCardDOM(node));
                 }
             });
 
             recZone.style.display = recommendationAdded ? 'block' : 'none';
-            
-            if (subbedFeedTarget.children.length === 0) {
-                subbedFeedTarget.innerHTML = `<div class="mono-font" style="font-size:12px; color:var(--text-muted); text-align:center; padding:30px 0;">Belum ada kategori ter-monitor yang di-bookmark.</div>`;
-            }
-            if (mainFeedTarget.children.length === 0) {
-                mainFeedTarget.innerHTML = `<div class="mono-font" style="font-size:12px; color:var(--text-muted); text-align:center; padding:30px 0;">Tidak ada log arsip data yang cocok dengan kriteria filter.</div>`;
-            }
+            if (subbedFeedTarget.children.length === 0) subbedFeedTarget.innerHTML = `<div class="mono-font" style="font-size:12px; color:var(--text-muted); text-align:center; padding:30px 0;">Belum ada kategori ter-monitor yang di-bookmark.</div>`;
+            if (mainFeedTarget.children.length === 0) mainFeedTarget.innerHTML = `<div class="mono-font" style="font-size:12px; color:var(--text-muted); text-align:center; padding:30px 0;">Tidak ada log arsip data yang cocok dengan kriteria filter.</div>`;
         }
 
-        function createNodeCardDOM(node, isRecommendedBadge = false) {
+        // FITUR BARU: Membuat Kotak Teaser Kecil di Beranda
+        function createTeaserCardDOM(node, isRec = false) {
+            const card = document.createElement('div');
+            card.className = "node-teaser";
+            
+            let tierClassColor = 'var(--tier-d)';
+            if (node.tier === 'SSS+') tierClassColor = 'var(--tier-sss)';
+            if (node.tier === 'S') tierClassColor = 'var(--tier-s)';
+            if (node.tier === 'A') tierClassColor = 'var(--tier-a)';
+            if (node.tier === 'B') tierClassColor = 'var(--tier-b)';
+
+            card.innerHTML = `
+                <div class="node-teaser-content">
+                    <div class="teaser-meta">
+                        <span style="color:${tierClassColor}">TIER ${node.tier}</span>
+                        <span>${formatTimestamp(node.timestamp)}</span>
+                    </div>
+                    <div class="node-teaser-title">${node.caption}</div>
+                    <div class="node-teaser-desc">${node.description}</div>
+                    ${isRec ? `<span class="badge-tag" style="background:#f59e0b; width:fit-content; margin-top:4px;"><i class="fa-solid fa-bolt"></i> REC</span>` : ''}
+                </div>
+                ${node.imageUrl ? `<img src="${node.imageUrl}" class="node-teaser-img">` : `<div class="node-teaser-img" style="display:flex; justify-content:center; align-items:center; font-size:24px; color:var(--border);"><i class="fa-solid fa-file-invoice"></i></div>`}
+            `;
+
+            // Ketika teaser di klik, buka Full Post
+            card.addEventListener('click', () => {
+                window.openFullPost(node);
+            });
+
+            return card;
+        }
+
+        // FITUR BARU: Membuka Tab Full Post 
+        window.openFullPost = function(node) {
+            previousTab = activeTab; // Simpan dari tab mana dia berasal (beranda / subbed)
+            
+            // Sembunyikan semua tab
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            
+            // Tampilkan tab full post
+            const fullPostTab = document.getElementById('tab-full-post');
+            fullPostTab.classList.add('active');
+            
+            // Render full post 
+            const target = document.getElementById('full-post-target');
+            target.innerHTML = "";
+            target.appendChild(createNodeCardDOM(node));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // FITUR BARU: Tombol Kembali
+        window.closeFullPost = function() {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(previousTab).classList.add('active');
+            activeTab = previousTab;
+        };
+
+        function createNodeCardDOM(node) {
             const card = document.createElement('div');
             card.className = "node-card";
             card.setAttribute('data-id', node.id);
@@ -1773,28 +1221,24 @@
             if (node.tier === 'S') tierClassColor = 'var(--tier-s)';
             if (node.tier === 'A') tierClassColor = 'var(--tier-a)';
             if (node.tier === 'B') tierClassColor = 'var(--tier-b)';
-
             const isBookmarked = subbedCategories.includes(node.category);
 
             card.innerHTML = `
-                <button class="delete-node-btn" style="display: ${userRole === 'CEO' ? 'flex' : 'none'};" onclick="window.deleteVyrenixNode('${node.id}')">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <button class="delete-node-btn" style="display: ${userRole === 'CEO' ? 'flex' : 'none'};" onclick="window.deleteVyrenixNode('${node.id}')"><i class="fa-solid fa-xmark"></i></button>
                 ${node.imageUrl ? `<img src="${node.imageUrl}" class="node-img" alt="Arsip Log">` : ''}
                 <div class="node-body">
+                    <div class="node-timestamp">${formatTimestamp(node.timestamp)}</div>
                     <div class="node-header-info">
                         <div>
                             <span class="node-caption">${node.caption}</span>
-                            <div class="node-badges" style="margin-top:4px;">
+                            <div class="node-badges">
                                 <span class="badge-tag" style="background:${tierClassColor}">TIER ${node.tier}</span>
                                 <span class="badge-tag" style="background:var(--primary)">${node.category}</span>
-                                ${isRecommendedBadge ? `<span class="badge-tag" style="background:#f59e0b;"><i class="fa-solid fa-bolt"></i> DIREKOMENDASIKAN</span>` : ''}
                             </div>
                         </div>
-                        <button class="bookmark-node-btn ${isBookmarked ? 'active' : ''}" onclick="window.toggleCategoryBookmark('${node.category}')" title="Monitor Kategori Ini">
-                            <i class="fa-solid fa-star"></i>
-                        </button>
                     </div>
+                    <button class="bookmark-node-btn ${isBookmarked ? 'active' : ''}" onclick="window.toggleCategoryBookmark('${node.category}')" title="Monitor Kategori"><i class="fa-solid fa-star"></i></button>
+                    
                     <div class="node-desc mono-font">${node.description}</div>
                     
                     <div class="comments-section">
@@ -1813,7 +1257,6 @@
                 const commListTarget = card.querySelector(`#comments-list-${node.id}`);
                 const commCountTarget = card.querySelector(`#count-${node.id}`);
                 if (!commListTarget) return;
-
                 commListTarget.innerHTML = "";
                 let count = 0;
 
@@ -1821,6 +1264,13 @@
                     count++;
                     const cData = cDoc.data();
                     const cId = cDoc.id;
+
+                    // FITUR BARU: Cek Like pakai array untuk batas 1 per orang
+                    const likedByArray = cData.likedBy || [];
+                    // Handle data lama (yg pakai angka 'likes') buat transisi
+                    const displayLikes = likedByArray.length > 0 ? likedByArray.length : (cData.likes || 0); 
+                    const isLikedByMe = currentUser ? likedByArray.includes(currentUser.uid) : false;
+                    const likeColor = isLikedByMe ? "var(--primary)" : "var(--text-muted)";
 
                     const commItem = document.createElement('div');
                     commItem.className = "comment-item";
@@ -1832,8 +1282,8 @@
                         </div>
                         <div class="comment-text">${cData.text}</div>
                         <div class="comment-actions">
-                            <span class="comment-action-btn" onclick="window.likeCommentAction('${node.id}', '${cId}', ${cData.likes || 0})">
-                                <i class="fa-solid fa-thumbs-up"></i> Liked (${cData.likes || 0})
+                            <span class="comment-action-btn ${isLikedByMe ? 'liked' : ''}" style="color:${likeColor};" onclick="window.likeCommentAction('${node.id}', '${cId}')">
+                                <i class="fa-solid fa-thumbs-up"></i> Liked (${displayLikes})
                             </span>
                             <span class="comment-action-btn" onclick="window.triggerReplyPrompt('${node.id}', '${cId}')">
                                 <i class="fa-solid fa-reply"></i> Balas
@@ -1847,7 +1297,6 @@
                         const replyTarget = commItem.querySelector(`#replies-container-${cId}`);
                         if (!replyTarget) return;
                         replyTarget.innerHTML = "";
-
                         rSnapshot.forEach(rDoc => {
                             const rData = rDoc.data();
                             const replyItem = document.createElement('div');
@@ -1863,33 +1312,24 @@
                             replyTarget.appendChild(replyItem);
                         });
                     });
-
                     commListTarget.appendChild(commItem);
                 });
-
                 commCountTarget.innerText = `Komentar (${count})`;
             });
-
             return card;
         }
 
         window.toggleCategoryBookmark = function(categoryName) {
-            if (subbedCategories.includes(categoryName)) {
-                subbedCategories = subbedCategories.filter(item => item !== categoryName);
-            } else {
-                subbedCategories.push(categoryName);
-            }
+            if (subbedCategories.includes(categoryName)) subbedCategories = subbedCategories.filter(item => item !== categoryName);
+            else subbedCategories.push(categoryName);
             localStorage.setItem('vyrenix_subbed_cats', JSON.stringify(subbedCategories));
             renderFeedsEngine();
         };
 
         window.deleteVyrenixNode = async function(nodeId) {
-            if (confirm("Apakah anda yakin ingin menghapus log arsip data laboratorium ini permanen dari cloud server?")) {
-                try {
-                    await deleteDoc(doc(db, "vyrenix_nodes", nodeId));
-                } catch (e) {
-                    alert("Gagal menghapus log data cloud server.");
-                }
+            if (confirm("Yakin ingin menghapus arsip data ini?")) {
+                try { await deleteDoc(doc(db, "vyrenix_nodes", nodeId)); window.closeFullPost(); } 
+                catch (e) { alert("Gagal menghapus."); }
             }
         };
 
@@ -1897,96 +1337,110 @@
             const inputEl = document.getElementById(`input-field-${nodeId}`);
             const textVal = inputEl.value.trim();
             if (!textVal || !currentUser) return; 
-
-            try {
-                await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments`), {
-                    text: textVal,
-                    authorName: currentUser.displayName || "Anonymous Crew",
-                    authorAvatar: currentUser.photoURL || "https://via.placeholder.com/150",
-                    authorRole: userRole,
-                    likes: 0,
-                    timestamp: Date.now()
-                });
-                inputEl.value = "";
-            } catch (err) {
-                console.error("Comment submit failed:", err);
-            }
+            onSnapshot(doc(db, "vyrenix_users", currentUser.uid), async (docSnap) => {
+                let dbData = docSnap.exists() ? docSnap.data() : {};
+                try {
+                    await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments`), {
+                        text: textVal, authorName: dbData.displayName || currentUser.displayName || "Anonymous Crew",
+                        authorAvatar: dbData.avatarBase64 || currentUser.photoURL || "https://via.placeholder.com/150",
+                        authorRole: userRole, likes: 0, likedBy: [], timestamp: Date.now()
+                    });
+                    inputEl.value = "";
+                } catch (err) {}
+            });
         };
 
-        window.likeCommentAction = async function(nodeId, commentId, currentLikes) {
+        // FITUR BARU: Sistem Like Unik per Orang Menggunakan ArrayUnion Firebase
+        window.likeCommentAction = async function(nodeId, commentId) {
+            if(!currentUser) return;
             const commentRef = doc(db, `vyrenix_nodes/${nodeId}/comments`, commentId);
-            await updateDoc(commentRef, {
-                likes: currentLikes + 1
-            });
+            const commentSnap = await getDoc(commentRef);
+            
+            if(commentSnap.exists()) {
+                const data = commentSnap.data();
+                const likedByArray = data.likedBy || [];
+                
+                // Kalau UID udah ada di array = Berarti klik buat UNLIKE
+                if(likedByArray.includes(currentUser.uid)) {
+                    await updateDoc(commentRef, { likedBy: arrayRemove(currentUser.uid) });
+                } else {
+                    // Kalau UID belum ada = Berarti klik buat LIKE
+                    await updateDoc(commentRef, { likedBy: arrayUnion(currentUser.uid) });
+                }
+            }
         };
 
         window.triggerReplyPrompt = async function(nodeId, commentId) {
             const replyText = prompt("Masukkan pesan balasan anda:");
             if (!replyText || !replyText.trim() || !currentUser) return; 
-
-            try {
-                await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments/${commentId}/replies`), {
-                    text: replyText.trim(),
-                    authorName: currentUser.displayName || "Anonymous Crew",
-                    authorAvatar: currentUser.photoURL || "https://via.placeholder.com/150",
-                    authorRole: userRole,
-                    timestamp: Date.now()
-                });
-            } catch (e) {
-                console.error("Failed storing sub-level replies framework:", e);
-            }
+            onSnapshot(doc(db, "vyrenix_users", currentUser.uid), async (docSnap) => {
+                let dbData = docSnap.exists() ? docSnap.data() : {};
+                try {
+                    await addDoc(collection(db, `vyrenix_nodes/${nodeId}/comments/${commentId}/replies`), {
+                        text: replyText.trim(), authorName: dbData.displayName || currentUser.displayName || "Anonymous",
+                        authorAvatar: dbData.avatarBase64 || currentUser.photoURL || "https://via.placeholder.com/150",
+                        authorRole: userRole, timestamp: Date.now()
+                    });
+                } catch (e) {}
+            });
         };
 
-        // ================= UPLOADER FORM LOGIC =================
-
+        // ==== UPLOADER FORM LOGIC DENGAN COMPRESSOR OTOMATIS ====
         let nodeImageBase64 = "";
         const fileZoneBtn = document.getElementById('btn-trigger-file');
         const hiddenFileInput = document.getElementById('input-node-file');
+
+        // FITUR BARU: Resizer / Compressor Gambar (Fix upload gambar hilang karena size kepenuhan!)
+        function compressImage(base64Str, maxWidth = 800, callback) {
+            let img = new Image();
+            img.src = base64Str;
+            img.onload = () => {
+                let canvas = document.createElement('canvas');
+                let width = img.width; let height = img.height;
+                if (width > maxWidth) { height = Math.round(height *= maxWidth / width); width = maxWidth; }
+                canvas.width = width; canvas.height = height;
+                let ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                // Kompres ke JPEG 70% quality untuk menghindari 1MB Limit Firestore
+                callback(canvas.toDataURL('image/jpeg', 0.7)); 
+            }
+        }
 
         fileZoneBtn.addEventListener('click', () => hiddenFileInput.click());
         hiddenFileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(evt) {
-                nodeImageBase64 = evt.target.result;
-                const previewImg = document.getElementById('image-upload-preview');
-                previewImg.src = nodeImageBase64;
-                previewImg.style.display = 'block';
-                fileZoneBtn.querySelector('i').style.display = 'none';
-                fileZoneBtn.querySelector('span').style.display = 'none';
+                // Resize base64 yg masuk dulu
+                compressImage(evt.target.result, 800, (compressedBase64) => {
+                    nodeImageBase64 = compressedBase64;
+                    const previewImg = document.getElementById('image-upload-preview');
+                    previewImg.src = nodeImageBase64;
+                    previewImg.style.display = 'block';
+                    fileZoneBtn.querySelector('i').style.display = 'none';
+                    fileZoneBtn.querySelector('span').style.display = 'none';
+                });
             };
             reader.readAsDataURL(file);
         });
 
         document.getElementById('btn-submit-node').addEventListener('click', async () => {
-            if (userRole !== "CEO") {
-                alert("Otoritas Penolakan! Hanya tingkat jabatan CEO yang diizinkan mengunggah arsip.");
-                return;
-            }
-
+            if (userRole !== "CEO") { alert("Otoritas Penolakan!"); return; }
             const caption = document.getElementById('input-node-caption').value.trim();
             const category = document.getElementById('input-node-category').value;
             const tier = document.getElementById('input-node-tier').value;
             const description = document.getElementById('input-node-desc').value.trim();
 
-            if (!caption || !description) {
-                alert("Harap lengkapi isi komponen judul data dan deskripsi log!");
-                return;
-            }
+            if (!caption || !description) { alert("Harap lengkapi judul dan deskripsi!"); return; }
 
             document.getElementById('btn-submit-node').innerText = "Transmitting to Space Cloud Database...";
             document.getElementById('btn-submit-node').disabled = true;
 
             try {
                 await addDoc(collection(db, "vyrenix_nodes"), {
-                    caption,
-                    category,
-                    tier,
-                    description,
-                    imageUrl: nodeImageBase64 || "", 
-                    timestamp: Date.now()
+                    caption, category, tier, description,
+                    imageUrl: nodeImageBase64 || "", timestamp: Date.now()
                 });
 
                 document.getElementById('form-node-uploader').reset();
@@ -1997,64 +1451,46 @@
 
                 document.getElementById('btn-submit-node').innerText = "Unggah ke Cloud Server";
                 document.getElementById('btn-submit-node').disabled = false;
-
                 document.querySelector('[data-target="tab-beranda"]').click();
-
             } catch (err) {
-                alert("Penyimpanan repositori data gagal terkirim.");
+                alert("Penyimpanan gagal, pastikan ukuran gambar tidak terlalu masif.");
                 document.getElementById('btn-submit-node').innerText = "Unggah ke Cloud Server";
                 document.getElementById('btn-submit-node').disabled = false;
             }
         });
 
-        // ================= REAL-TIME UNIFIED FLOATING CHAT CONTROLLERS =================
-
+        // ==== FLOATING CHAT CONTROLLERS ====
         document.getElementById('form-chat-sender').addEventListener('submit', async (e) => {
             e.preventDefault();
             const chatField = document.getElementById('input-chat-msg');
             const messageText = chatField.value.trim();
             if (!messageText || !currentUser) return; 
-
-            try {
-                await addDoc(collection(db, "vyrenix_chats"), {
-                    text: messageText,
-                    senderUid: currentUser.uid,
-                    senderName: currentUser.displayName || "CEO / Creator",
-                    senderRole: userRole,
-                    timestamp: Date.now()
-                });
-                chatField.value = "";
-            } catch (err) {
-                console.error("Transmitting message crash loop:", err);
-            }
+            onSnapshot(doc(db, "vyrenix_users", currentUser.uid), async (docSnap) => {
+                let dbData = docSnap.exists() ? docSnap.data() : {};
+                const currentNick = dbData.nickname || currentUser.displayName || "CEO / Creator";
+                try {
+                    await addDoc(collection(db, "vyrenix_chats"), {
+                        text: messageText, senderUid: currentUser.uid, senderName: currentNick, senderRole: userRole, timestamp: Date.now()
+                    });
+                    chatField.value = "";
+                } catch (err) {}
+            });
         });
 
         function renderChatBubble(chat) {
             const container = document.getElementById('chat-messages-container');
             const isSelf = chat.senderUid === currentUser?.uid;
-
             const bubble = document.createElement('div');
-            bubble.style.maxWidth = "85%";
-            bubble.style.padding = "8px 12px";
-            bubble.style.borderRadius = "10px";
-            bubble.style.fontSize = "12px";
-            bubble.style.lineHeight = "1.4";
-            bubble.style.wordWrap = "break-word";
-            bubble.style.display = "block";
-            bubble.style.marginBottom = "6px";
-            
+            bubble.style.maxWidth = "85%"; bubble.style.padding = "8px 12px"; bubble.style.borderRadius = "10px";
+            bubble.style.fontSize = "12px"; bubble.style.lineHeight = "1.4"; bubble.style.wordWrap = "break-word";
+            bubble.style.display = "block"; bubble.style.marginBottom = "6px";
             if (isSelf) {
-                bubble.style.background = "#e6f0ff";
-                bubble.style.alignSelf = "flex-end";
-                bubble.style.border = "1px solid rgba(0,102,255,0.1)";
-                bubble.style.borderRadius = "10px 10px 2px 10px";
+                bubble.style.background = "rgba(0,102,255,0.12)"; bubble.style.alignSelf = "flex-end";
+                bubble.style.border = "1px solid rgba(0,102,255,0.2)"; bubble.style.borderRadius = "10px 10px 2px 10px";
             } else {
-                bubble.style.background = "#ffffff";
-                bubble.style.alignSelf = "flex-start";
-                bubble.style.border = "1px solid var(--border)";
-                bubble.style.borderRadius = "10px 10px 10px 2px";
+                bubble.style.background = "var(--card-bg)"; bubble.style.alignSelf = "flex-start";
+                bubble.style.border = "1px solid var(--border)"; bubble.style.borderRadius = "10px 10px 10px 2px";
             }
-
             bubble.innerHTML = `
                 <div class="chat-user-meta" style="font-size:9px; font-weight:bold; color:var(--primary); margin-bottom:2px; display:flex; align-items:center; gap:4px;">
                     <span>${chat.senderName}</span>
@@ -2063,43 +1499,25 @@
                 <div style="color:var(--text-main);">${chat.text}</div>
             `;
             container.appendChild(bubble);
-            container.scrollTop = container.scrollHeight;
         }
 
-        // ================= INTERNAL SHIP JUKEBOX CONTROLLERS =================
-
+        // ==== JUKEBOX ====
         const playToggleBtn = document.getElementById('juke-play-toggle');
         const trackTitleSpan = document.getElementById('current-track-title');
-
-        function loadTrackEngine(idx) {
-            audioElement.src = tracklist[idx].url;
-            trackTitleSpan.innerText = tracklist[idx].title;
-        }
-
+        function loadTrackEngine(idx) { audioElement.src = tracklist[idx].url; trackTitleSpan.innerText = tracklist[idx].title; }
         playToggleBtn.addEventListener('click', () => {
             if (audioElement.paused) {
                 audioElement.play().then(() => {
-                    playToggleBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
-                    playToggleBtn.classList.add('playing');
-                }).catch(err => {
-                    alert("Interaksi browser diblokir! Silakan klik kembali untuk memicu pemutaran manual.");
-                });
+                    playToggleBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`; playToggleBtn.classList.add('playing');
+                }).catch(err => { alert("Klik manual buat puter lagu."); });
             } else {
-                audioElement.pause();
-                playToggleBtn.innerHTML = `<i class="fa-solid fa-play"></i>`;
-                playToggleBtn.classList.remove('playing');
+                audioElement.pause(); playToggleBtn.innerHTML = `<i class="fa-solid fa-play"></i>`; playToggleBtn.classList.remove('playing');
             }
         });
-
         document.getElementById('juke-next-track').addEventListener('click', () => {
-            currentTrackIdx = (currentTrackIdx + 1) % tracklist.length;
-            loadTrackEngine(currentTrackIdx);
-            audioElement.play().then(() => {
-                playToggleBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
-                playToggleBtn.classList.add('playing');
-            });
+            currentTrackIdx = (currentTrackIdx + 1) % tracklist.length; loadTrackEngine(currentTrackIdx);
+            audioElement.play().then(() => { playToggleBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`; playToggleBtn.classList.add('playing'); });
         });
-
         loadTrackEngine(currentTrackIdx);
 
     </script>
